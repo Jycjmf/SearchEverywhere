@@ -1,0 +1,228 @@
+﻿<hc:Window x:Class="SearchEverywhere.MainWindow"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:hc="https://handyorg.github.io/handycontrol"
+           xmlns:converter="clr-namespace:SearchEverywhere.Converter"
+           xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+           mc:Ignorable="d"
+           DataContext="{Binding Source={StaticResource ViewModelLocator},Path=mainViewModel}"
+           Title="SearchEverywhere" Height="600" Width="960" Loaded="Window_Loaded" ShowNonClientArea="False"
+           Background="White">
+    <Window.Resources>
+        <converter:ProcessIconConverter x:Key="ProcessIconConverter" />
+        <converter:StringToXamlConverter x:Key="HighlightConverter" />
+        <converter:WidthConverter x:Key="WidthConverter" />
+        <Style x:Key="TopMenuStyle" TargetType="RadioButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Content}" FontSize="15" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            <Border Name="SelectedBorder" Height="3" Background="Transparent" Margin="0 8 0 0"
+                                    CornerRadius="3" />
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="SelectedBorder" Property="Background"
+                                        Value="{DynamicResource ThemeColor}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="HeaderStyle" TargetType="GridViewColumnHeader">
+            <Setter Property="Height" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridViewColumnHeader" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ItemStyle" TargetType="ListViewItem">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Border Name="ItemGrid" Height="60" Background="{TemplateBinding Background}" CornerRadius="10"
+                                Width="{Binding RelativeSource={RelativeSource AncestorType=ListView},Path=ActualWidth,Converter={StaticResource WidthConverter}}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10 0">
+                                <hc:Gravatar Name="GravatarItem" Style="{StaticResource GravatarBaseStyle }"
+                                             hc:BorderElement.CornerRadius="40" Width="40" Height="40"
+                                             Background="{StaticResource IconBackgroundBrush}">
+                                    <hc:Gravatar.Effect>
+                                        <DropShadowEffect BlurRadius="10" Direction="-45" Opacity="0.3" ShadowDepth="5"
+                                                          RenderingBias="Quality" />
+                                    </hc:Gravatar.Effect>
+                                    <Image
+                                        Source="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem},Path=Content,Converter={StaticResource ProcessIconConverter}}"
+                                        SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </hc:Gravatar>
+                               
+                                <ContentControl Name="ItemText" FontSize="16" VerticalAlignment="Center"
+                                                Margin="10 0 0 0" HorizontalAlignment="Left"
+                                                Content="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem},Path=Content,Converter={StaticResource HighlightConverter}}" />
+                            </StackPanel>
+
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Trigger.Setters>
+                                    <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                                    <Setter Property="Background" TargetName="GravatarItem" Value="White" />
+                                    <!--<Setter Property="Foreground" Value="White" />-->
+                                    <Setter Property="Height" TargetName="ItemGrid" Value="70" />
+                                    <Setter Property="FontWeight" TargetName="ItemText" Value="Bold" />
+
+                                </Trigger.Setters>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Gesture="TAB" Command="{Binding InputCommand}" />
+        <KeyBinding Gesture="ENTER" Command="{Binding EnterCommand}" />
+        <KeyBinding Gesture="UP" Command="{Binding UpCommand}" />
+        <KeyBinding Gesture="DOWN" Command="{Binding DownCommand}" />
+    </Window.InputBindings>
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="50"
+            CornerRadius="0"
+            ResizeBorderThickness="4"
+            GlassFrameThickness="5" />
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="68" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <!--顶部导航栏-->
+        <Grid Grid.Row="1" Grid.Column="1" Margin="20 0" Background="White"
+              WindowChrome.IsHitTestVisibleInChrome="True">
+            <UniformGrid Columns="4">
+                <RadioButton Content="全部结果" IsChecked="{Binding SelectedItem[0]}" Command="{Binding ChangeItemCommand}"
+                             CommandParameter="0" hc:BorderElement.CornerRadius="0"
+                             Style="{StaticResource TopMenuStyle}" />
+                <RadioButton Content="近期任务" IsChecked="{Binding SelectedItem[1]}" Command="{Binding ChangeItemCommand}"
+                             CommandParameter="1" hc:BorderElement.CornerRadius="0"
+                             Style="{StaticResource TopMenuStyle}" />
+                <RadioButton Content="本地磁盘" IsChecked="{Binding SelectedItem[2]}" hc:BorderElement.CornerRadius="0"
+                             Style="{StaticResource TopMenuStyle}" />
+                <RadioButton Content="网络搜索" IsChecked="{Binding SelectedItem[3]}" hc:BorderElement.CornerRadius="0"
+                             Style="{StaticResource TopMenuStyle}" />
+            </UniformGrid>
+        </Grid>
+
+        <!--搜索栏Grid-->
+        <Grid Name="SearchBarGrid" Grid.Row="2" Grid.Column="1" VerticalAlignment="Top" Margin="40 30 40 0"
+              Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="0.2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center">快速搜索</TextBlock>
+            <!--过滤-->
+            <Button Name="FilterBtn" FontWeight="Bold" Grid.Column="1"
+                    Height="30" Width="40" Foreground="{StaticResource BorderBrush}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="18"
+                                   FontFamily="./Fonts/#iconfont" Text="&#xe617;"
+                                   Foreground="{TemplateBinding Foreground}" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" TargetName="FilterText"
+                                        Value="{StaticResource SecondaryBorderBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Border Grid.Column="0" Width="2" Background="{StaticResource BorderBrush}" HorizontalAlignment="Right" />
+            <!--搜索栏-->
+            <hc:SearchBar Grid.Column="2" WindowChrome.IsHitTestVisibleInChrome="True" Name="SearchBar"
+                          hc:InfoElement.Placeholder="请输入内容"
+                          BorderThickness="0" Background="Transparent"
+                          Style="{StaticResource SearchBarExtend}" hc:BorderElement.CornerRadius="0"
+                          Text="{Binding Keyword,UpdateSourceTrigger=PropertyChanged}">
+                <hc:SearchBar.InputBindings>
+                    <KeyBinding Gesture="UP" Command="{Binding UpCommand}" />
+                    <KeyBinding Gesture="DOWN" Command="{Binding DownCommand}" />
+                </hc:SearchBar.InputBindings>
+            </hc:SearchBar>
+
+        </Grid>
+
+        <!--左侧导航栏-->
+        <Grid Grid.Column="0" Grid.RowSpan="4" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid >
+                <Image Source="img/logo.png" Margin="15" RenderOptions.BitmapScalingMode="HighQuality" />
+            </Grid>
+            <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="0 70 0 0">
+                <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="True" HorizontalAlignment="Stretch" >
+                    <svgc:SvgViewbox Source="img/dashboard.svg" Grid.Row="1" Margin="4 5" />
+                </RadioButton>
+                <RadioButton Style="{StaticResource RadioButtonIcon}" HorizontalAlignment="Stretch" Margin="0 10">
+                    <svgc:SvgViewbox Source="img/application.svg" Grid.Row="1" Margin="5" />
+                </RadioButton>
+                <RadioButton Style="{StaticResource RadioButtonIcon}" HorizontalAlignment="Stretch" Margin="0 10">
+                    <svgc:SvgViewbox Source="img/effect.svg" Grid.Row="1" Margin="1" />
+                </RadioButton>
+                <RadioButton Style="{StaticResource RadioButtonIcon}" HorizontalAlignment="Stretch" Margin="0 10">
+                    <svgc:SvgViewbox Source="img/setting.svg" Grid.Row="1" Margin="5" />
+                </RadioButton>
+            </StackPanel>
+        </Grid>
+
+        <!--快速预览-->
+        <Grid Grid.Column="2" Grid.RowSpan="4" Background="#FBFAFF" />
+        <!--搜索结果-->
+        <ListView Grid.Row="3" ItemsSource="{Binding SearchResultList}" Grid.Column="1" 
+                  ItemContainerStyle="{StaticResource ItemStyle}" SelectedIndex="{Binding SelectIndex}"
+                  BorderThickness="0" Margin="30 10 30 0" Background="White">
+            <ListView.View>
+                <GridView ColumnHeaderContainerStyle="{StaticResource HeaderStyle}">
+                    <GridViewColumn />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <GridSplitter Grid.RowSpan="4" Grid.Column="1" Width="1" HorizontalAlignment="Right" Background="Transparent"
+                      VerticalAlignment="Stretch" />
+        <GridSplitter Grid.RowSpan="4" Grid.Column="1" Width="1" HorizontalAlignment="Left" Background="{StaticResource BorderBrush}"
+                      VerticalAlignment="Stretch" />
+        <Border Height="1" Background="White" Grid.Row="1" Grid.Column="1"
+                HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="20 0" />
+        <Border Height="1" Background="White" Grid.Row="2" Grid.Column="1"
+                Margin="20 0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+
+    </Grid>
+</hc:Window>

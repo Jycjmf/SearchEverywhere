@@ -1,0 +1,30 @@
+﻿<Application x:Class="SearchEverywhere.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SearchEverywhere.ViewModel"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <vm:ViewModelLocator x:Key="ViewModelLocator" />
+            <SolidColorBrush Color="#51459E" x:Key="ThemeColor" />
+            <SolidColorBrush Color="White" x:Key="TitleBrush" />
+            <SolidColorBrush Color="#999999" x:Key="HighlightBorderBrush" />
+            <SolidColorBrush Color="#FC9D10" x:Key="HighlightBrush" /> <!--没啥用-->
+            <SolidColorBrush Color="#FC9D10" x:Key="PrimaryBrush" />
+            <!--<SolidColorBrush Color="#999999" x:Key="HighlightForeground" />-->
+            <!--<SolidColorBrush Color="#999999" x:Key="PrimaryTextBrush" />-->
+            <SolidColorBrush Color="#FC9D10" x:Key="SecondaryBorderBrush" />
+            <!--<SolidColorBrush Color="Black" x:Key="DefaultBrush" />-->
+            <!--<Color x:Key="BackgroundColor">#99CCFF</Color>-->
+            <SolidColorBrush Color="#F9896B" x:Key="AccentBrush" />
+            <system:UInt32 x:Key="BlurGradientValue">0xfFFFFF</system:UInt32>
+
+            <SolidColorBrush Color="white" x:Key="IconBackgroundBrush" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

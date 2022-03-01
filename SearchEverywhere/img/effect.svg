@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-SPRK_default_preset_name_custom_1">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="SPRK_default_preset_name_custom_1" data-name="SPRK_default_preset_name_custom – 1" clip-path="url(#clip-SPRK_default_preset_name_custom_1)">
+    <g id="火箭" transform="translate(-101.749 -21.538)">
+      <path id="Path_1" data-name="Path 1" d="M430.956,460.022l67.166,83.39v85.28l-67.166-23.785Zm-157.518-2.678-67.166,83.422v85.28l67.166-23.817Z" transform="translate(0 -214.443)" fill="#fc9d10"/>
+      <path id="Path_2" data-name="Path 2" d="M487.855,418.038l-70.316.567q-5,.049-9.987-.284l1.827,220.841c.126,14.24,46.4,64.015,46.4,64.015s46.216-50.532,46.09-64.772l-1.827-221Q493.964,417.942,487.855,418.038Z" transform="translate(-102.201 -194.166)" fill="#fc9d10"/>
+      <path id="Path_3" data-name="Path 3" d="M494.9,598.971l-31.031.284a41.3,41.3,0,0,1-4.411-.189l1.071,126.9c.063,8.191,20.54,36.828,20.54,36.828s20.351-29.015,20.32-37.174l-1.071-126.96A51.576,51.576,0,0,1,494.9,598.971Z" transform="translate(-128.555 -286.195)" fill="#e9df92"/>
+      <path id="Path_4" data-name="Path 4" d="M446.871,91.575a159.661,159.661,0,0,0-54.438.851L342.72,164.034V451.757c6.8-.473,13.767-.756,20.855-.756H484.3c5.828,0,11.5.189,17.138.5v-281.3Z" transform="translate(-69.282 -27.741)" fill="#51459e"/>
+      <path id="Path_5" data-name="Path 5" d="M451.815,64.117,431.621,35.008,409.128,64.117V78.641h43.822V64.117Zm-40.356,95.74h43.79v43.759h-43.79Zm0,88.021h43.79v43.79h-43.79Zm0,82.067h43.79V373.7h-43.79Zm-46.531,76.081H501.654v21.832H364.928Z" transform="translate(-80.558)" fill="#fc9d10"/>
+    </g>
+  </g>
+</svg>

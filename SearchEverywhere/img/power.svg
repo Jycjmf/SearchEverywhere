@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-SPRK_default_preset_name_custom_1">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="SPRK_default_preset_name_custom_1" data-name="SPRK_default_preset_name_custom – 1" clip-path="url(#clip-SPRK_default_preset_name_custom_1)">
+    <g id="电源" transform="translate(-62.445 -149.138)">
+      <path id="Path_1" data-name="Path 1" d="M458.026,247.51a19.879,19.879,0,1,0-25.414,30.576A187.956,187.956,0,0,1,313.883,610.747h-1.191c-103.044,0-187.227-83.488-187.823-186.731a188.379,188.379,0,0,1,93.614-163.7,19.819,19.819,0,1,0-19.954-34.249A227.537,227.537,0,0,0,85.16,424.016C85.954,549.1,187.906,650.257,312.791,650.257h1.39A227.52,227.52,0,0,0,458.026,247.51Z" transform="matrix(0.998, -0.07, 0.07, 0.998, -29.708, 0.839)" fill="#51459e"/>
+      <path id="Path_2" data-name="Path 2" d="M462.222,359.284a19.913,19.913,0,0,0,19.854-19.854V190.521a19.854,19.854,0,0,0-39.709,0V339.429a19.854,19.854,0,0,0,19.854,19.854Z" transform="translate(-149.432)" fill="#fc9d10"/>
+    </g>
+  </g>
+</svg>
