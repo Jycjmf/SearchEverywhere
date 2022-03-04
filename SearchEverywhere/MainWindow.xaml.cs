@@ -1,40 +1,32 @@
 ﻿using System;
 using System.Windows;
 
-namespace SearchEverywhere
+namespace SearchEverywhere;
+
+public partial class MainWindow
 {
-    public partial class MainWindow
+    public static Action<bool> ChangeWindowStateAction;
+
+    public MainWindow()
     {
-        public static Action<bool> ChangeWindowStateAction;
-
-        public MainWindow()
+        ChangeWindowStateAction = x =>
         {
-            ChangeWindowStateAction = x =>
+            Dispatcher.Invoke(() =>
             {
-                Dispatcher.Invoke(() =>
-                {
-                    if (x)
-                        Visibility = Visibility.Visible;
-                    else
-                        Visibility = Visibility.Hidden;
-                });
-            };
-            InitializeComponent();
-            Console.WriteLine(FirCol.ActualWidth);
-            SearchBar.Focus();
-        }
+                if (x)
+                    Visibility = Visibility.Visible;
+                else
+                    Visibility = Visibility.Hidden;
+            });
+        };
+        InitializeComponent();
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine(FirCol.ActualWidth);
-            Console.WriteLine("load");
-            //  Visibility = Visibility.Hidden;
-            //var hotkey = new HotKeyUtility();
-        }
+        SearchBar.Focus();
+    }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            Console.WriteLine(FirCol.ActualWidth);
-        }
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        //  Visibility = Visibility.Hidden;
+        //var hotkey = new HotKeyUtility();
     }
 }

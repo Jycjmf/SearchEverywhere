@@ -1,0 +1,129 @@
+﻿<Window x:Class="SearchEverywhere.View.PreviewView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        mc:Ignorable="d"
+        d:DesignHeight="450" d:DesignWidth="800">
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="40"
+            CornerRadius="0"
+            ResizeBorderThickness="4"
+            GlassFrameThickness="5" />
+    </WindowChrome.WindowChrome>
+    <Grid Background="#FBFAFF">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid Background="White" WindowChrome.IsHitTestVisibleInChrome="False">
+            <!--Pin-->
+            <Button Name="FullScreenBtn" FontWeight="Bold" HorizontalAlignment="Left"
+                    Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="22"
+                                   FontFamily="../Fonts/#iconfont" Text="&#xe75d;"
+                                   Foreground="{TemplateBinding Foreground}" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" TargetName="FilterText"
+                                        Value="{StaticResource SecondaryBorderBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!--Open Origin-->
+                <Button Name="OpenOriginBtn" FontWeight="Bold"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="18"
+                                       FontFamily="../Fonts/#iconfont" Text="&#xea66;"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" TargetName="FilterText"
+                                            Value="{StaticResource SecondaryBorderBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <!--Open Folder-->
+                <Button Name="OpenBtn" FontWeight="Bold"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="18"
+                                       FontFamily="../Fonts/#iconfont" Text="&#xebdf;"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" TargetName="FilterText"
+                                            Value="{StaticResource SecondaryBorderBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <!--Close-->
+                <Button Name="CloseBtn" FontWeight="Bold"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="15"
+                                       FontFamily="../Fonts/#iconfont" Text="&#xe60a;"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" TargetName="FilterText"
+                                            Value="{StaticResource SecondaryBorderBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+        <!--Image Preview-->
+        <Grid Grid.Row="1" >
+            <hc:ImageViewer Background="{DynamicResource SecondaryRegionBrush}" ImageSource="../img/test.jpg"/>
+
+        </Grid>
+    </Grid>
+</Window>

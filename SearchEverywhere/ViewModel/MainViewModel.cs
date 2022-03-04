@@ -17,46 +17,23 @@ namespace SearchEverywhere.ViewModel;
 
 public class MainViewModel : ObservableRecipient
 {
-    [DllImport("user32.dll")]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-    private int selectIndex;
-
-    public int SelectIndex
-    {
-        get => selectIndex;
-        set
-        {
-            SetProperty(ref selectIndex, value);
-            Console.WriteLine(searchResultList.Count);
-            if (searchResultList.Count != 0 && value != -1)
-                CurrentApp = searchResultList[value];
-            else
-                CurrentApp = null;
-            OnPropertyChanged();
-        }
-    }
-
+    private static readonly Everything.Everything everything = new();
     private ListItemModel currentApp;
 
-    public ListItemModel CurrentApp
-    {
-        get => currentApp;
-        set
-        {
-            SetProperty(ref currentApp, value);
-            OnPropertyChanged();
-        }
-    }
+    private string keyword;
 
     private ObservableCollection<ListItemModel> runningAppsList = new();
 
+    private ObservableCollection<ListItemModel> searchResultList = new();
+
     private Dictionary<int, bool> selectedItem = new() {{0, true}, {1, false}, {2, false}, {3, false}};
 
+    private int selectIndex;
 
     public MainViewModel()
     {
         Task.Run(GetTaskBarApps);
+        everything.InitSearch();
         ChangeItemCommand = new RelayCommand<object>(x => { Console.WriteLine(x); });
         InputCommand = new RelayCommand(() =>
         {
@@ -97,7 +74,30 @@ public class MainViewModel : ObservableRecipient
         });
     }
 
-    private ObservableCollection<ListItemModel> searchResultList = new();
+    public int SelectIndex
+    {
+        get => selectIndex;
+        set
+        {
+            SetProperty(ref selectIndex, value);
+            Console.WriteLine(searchResultList.Count);
+            if (searchResultList.Count != 0 && value != -1)
+                CurrentApp = searchResultList[value];
+            else
+                CurrentApp = null;
+            OnPropertyChanged();
+        }
+    }
+
+    public ListItemModel CurrentApp
+    {
+        get => currentApp;
+        set
+        {
+            SetProperty(ref currentApp, value);
+            OnPropertyChanged();
+        }
+    }
 
     public ObservableCollection<ListItemModel> SearchResultList
     {
@@ -109,32 +109,17 @@ public class MainViewModel : ObservableRecipient
         }
     }
 
-    private string keyword;
-
     public string Keyword
     {
         get => keyword;
         set
         {
             SetProperty(ref keyword, value);
-            StartSearch(value);
+            StartProcessSearch(value);
+            StartFileSearch(value);
+            CurrentApp = SearchResultList.First();
             OnPropertyChanged();
         }
-    }
-
-    private void StartSearch(string keyword)
-    {
-        keyword = keyword.Replace(@"\", @"\\");
-        var raw = runningAppsList
-            .Where(x => Regex.Matches(x.Title, keyword, RegexOptions.IgnoreCase).Count > 0)
-            .ToList();
-        var temp = new List<ListItemModel>();
-        foreach (var each in raw)
-            temp.Add(new ListItemModel(each.Icon,
-                Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd,
-                each.CreateTime, each.Size));
-        SearchResultList = new ObservableCollection<ListItemModel>(temp);
-        SelectIndex = 0;
     }
 
     public ObservableCollection<ListItemModel> RunningAppsList
@@ -164,6 +149,36 @@ public class MainViewModel : ObservableRecipient
     public ICommand UpCommand { get; }
     public ICommand DownCommand { get; }
 
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    private void StartProcessSearch(string keyword)
+    {
+        keyword = keyword.Replace(@"\", @"\\");
+        var raw = runningAppsList
+            .Where(x => Regex.Matches(x.Title, keyword, RegexOptions.IgnoreCase).Count > 0)
+            .ToList();
+        var temp = new List<ListItemModel>();
+        foreach (var each in raw)
+            temp.Add(new ListItemModel(each.Icon,
+                Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd,
+                each.CreateTime, each.Size, each.Path, each.Extension, each.SvgIcon));
+        //SearchResultList = new ObservableCollection<ListItemModel>(temp);
+        SearchResultList.Clear();
+        temp.ForEach(x => SearchResultList.Add(x));
+        SelectIndex = 0;
+    }
+
+    private void StartFileSearch(string keyword)
+    {
+        if (string.IsNullOrWhiteSpace(keyword))
+            return;
+        var res = everything.SearchFile(keyword);
+        if (res?.Count() == 0)
+            return;
+        res.ForEach(x => SearchResultList.Add(x));
+    }
+
     private void GetTaskBarApps()
     {
         var processes = Process.GetProcesses();
@@ -173,12 +188,13 @@ public class MainViewModel : ObservableRecipient
                 {
                     var icon = IconUtility.GetIcon(item.MainModule.FileName);
                     var tempItem = new ListItemModel(icon, item.MainWindowTitle, item.MainWindowHandle,
-                        item.StartTime, GetRamUsage(item));
+                        item.StartTime, GetRamUsage(item), null, null, null);
                     RunningAppsList.Add(tempItem);
                     SearchResultList.Add(tempItem);
                     SelectIndex = 0;
                 });
     }
+
 
     private string GetRamUsage(Process process)
     {
