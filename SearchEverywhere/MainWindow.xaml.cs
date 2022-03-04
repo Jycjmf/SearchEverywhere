@@ -20,13 +20,21 @@ namespace SearchEverywhere
                 });
             };
             InitializeComponent();
+            Console.WriteLine(FirCol.ActualWidth);
             SearchBar.Focus();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Console.WriteLine(FirCol.ActualWidth);
+            Console.WriteLine("load");
             //  Visibility = Visibility.Hidden;
             //var hotkey = new HotKeyUtility();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Console.WriteLine(FirCol.ActualWidth);
         }
     }
 }

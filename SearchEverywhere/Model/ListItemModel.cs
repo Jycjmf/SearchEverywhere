@@ -6,11 +6,36 @@ namespace SearchEverywhere.Model;
 
 public class ListItemModel : ObservableObject
 {
+    private DateTime createTime;
+
+    public DateTime CreateTime
+    {
+        get => createTime;
+        set
+        {
+            SetProperty(ref createTime, value);
+            OnPropertyChanged();
+        }
+    }
+
+    private string size;
+
+    public string Size
+    {
+        get => size;
+        set
+        {
+            SetProperty(ref size, value);
+            OnPropertyChanged();
+        }
+    }
+
     private BitmapImage icon;
 
     private string title;
 
     private IntPtr hwnd;
+
 
     public IntPtr Hwnd
     {
@@ -22,11 +47,13 @@ public class ListItemModel : ObservableObject
         }
     }
 
-    public ListItemModel(BitmapImage icon, string title, IntPtr hwnd)
+    public ListItemModel(BitmapImage icon, string title, IntPtr hwnd, DateTime createTime, string size)
     {
         Icon = icon;
         Title = title;
         Hwnd = hwnd;
+        CreateTime = createTime;
+        Size = size;
     }
 
     public BitmapImage Icon

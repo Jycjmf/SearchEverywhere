@@ -9,7 +9,7 @@
            mc:Ignorable="d"
            DataContext="{Binding Source={StaticResource ViewModelLocator},Path=mainViewModel}"
            Title="SearchEverywhere" Height="600" Width="960" Loaded="Window_Loaded" ShowNonClientArea="False"
-           Background="White">
+           Background="White" SizeChanged="Window_SizeChanged">
     <Window.Resources>
         <converter:ProcessIconConverter x:Key="ProcessIconConverter" />
         <converter:StringToXamlConverter x:Key="HighlightConverter" />
@@ -51,7 +51,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ListViewItem">
                         <Border Name="ItemGrid" Height="60" Background="{TemplateBinding Background}" CornerRadius="10"
-                                Width="{Binding RelativeSource={RelativeSource AncestorType=ListView},Path=ActualWidth,Converter={StaticResource WidthConverter}}">
+                                Width="{Binding RelativeSource={RelativeSource AncestorType=ListView},Path=ActualWidth,Converter={StaticResource WidthConverter},ConverterParameter=20}">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10 0">
                                 <hc:Gravatar Name="GravatarItem" Style="{StaticResource GravatarBaseStyle }"
                                              hc:BorderElement.CornerRadius="40" Width="40" Height="40"
@@ -64,7 +64,7 @@
                                         Source="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem},Path=Content,Converter={StaticResource ProcessIconConverter}}"
                                         SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </hc:Gravatar>
-                               
+
                                 <ContentControl Name="ItemText" FontSize="16" VerticalAlignment="Center"
                                                 Margin="10 0 0 0" HorizontalAlignment="Left"
                                                 Content="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem},Path=Content,Converter={StaticResource HighlightConverter}}" />
@@ -142,7 +142,7 @@
             <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center">快速搜索</TextBlock>
             <!--过滤-->
             <Button Name="FilterBtn" FontWeight="Bold" Grid.Column="1"
-                    Height="30" Width="40" Foreground="{StaticResource BorderBrush}">
+                    Height="30" Width="40" Foreground="Black" Cursor="Hand">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -168,6 +168,8 @@
             <hc:SearchBar Grid.Column="2" WindowChrome.IsHitTestVisibleInChrome="True" Name="SearchBar"
                           hc:InfoElement.Placeholder="请输入内容"
                           BorderThickness="0" Background="Transparent"
+                          BorderBrush="Black"
+                          hc:VisualElement.HighlightBorderBrush="{DynamicResource PrimaryBrush}"
                           Style="{StaticResource SearchBarExtend}" hc:BorderElement.CornerRadius="0"
                           Text="{Binding Keyword,UpdateSourceTrigger=PropertyChanged}">
                 <hc:SearchBar.InputBindings>
@@ -204,11 +206,107 @@
         </Grid>
 
         <!--快速预览-->
-        <Grid Grid.Column="2" Grid.RowSpan="4" Background="#FBFAFF" />
+        <Grid Grid.Column="2" Grid.RowSpan="4" Background="#FBFAFF">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                <ToggleButton Width="100" VerticalAlignment="Center" HorizontalAlignment="Right"
+                              Style="{StaticResource ToggleButtonSwitch}">
+                    显示详情
+                </ToggleButton>
+                <!--全屏-->
+                <Button Name="FullScreenBtn" FontWeight="Bold" HorizontalAlignment="Right"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="18"
+                                       FontFamily="./Fonts/#iconfont" Text="&#xe8fa;"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" TargetName="FilterText"
+                                            Value="{StaticResource SecondaryBorderBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+            <!--边框阴影-->
+            <Border Grid.Row="2" Background="White" Margin="20 0 20 0" CornerRadius="10">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" Direction="-45" Opacity="0.1" ShadowDepth="5"
+                                      RenderingBias="Quality" />
+                </Border.Effect>
+            </Border>
+            <!--程序状态信息-->
+            <Border Grid.Row="2" Background="White" Margin="20 0 20 0" CornerRadius="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Name="FirCol" Width="0.4*" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid>
+                        <Grid.OpacityMask>
+                            <VisualBrush Visual="{Binding ElementName=RadiusBorder}" />
+                        </Grid.OpacityMask>
+                        <Border x:Name="RadiusBorder" CornerRadius="10" Background="White"
+                                Width="{Binding ElementName=FirCol, Path=ActualWidth,Converter={StaticResource WidthConverter},ConverterParameter=25}"
+                                Height="{Binding RelativeSource={RelativeSource Self},Path=Width}" />
+                        <!--模糊背景-->
+                        <Border Grid.Column="0" 
+                                Width="{Binding ElementName=FirCol, Path=ActualWidth,Converter={StaticResource WidthConverter},ConverterParameter=25}"
+                                Height="{Binding RelativeSource={RelativeSource Self},Path=Width}">
+                            <Border Width="200" Height="200" ClipToBounds="True">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding CurrentApp.Icon}" Stretch="None" />
+                                </Border.Background>
+                                <Border.Effect>
+                                    <BlurEffect KernelType="Gaussian" RenderingBias="Quality" Radius="100" />
+                                </Border.Effect>
+                            </Border>
+                        </Border>
+                        <TextBlock Text="{Binding ElementName=FirCol, Path=ActualWidth}" HorizontalAlignment="Center"></TextBlock>
+                        <Image
+                            Source="{Binding CurrentApp.Icon}"
+                            Width="{Binding ElementName=FirCol, Path=ActualWidth,Converter={StaticResource WidthConverter},ConverterParameter=45}"
+                            Height="{Binding RelativeSource={RelativeSource Self},Path=Width}"
+                            RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Grid>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="30 0 10 0">
+                        <TextBlock FontSize="18" FontWeight="Bold" Text="{Binding CurrentApp.Title}" />
+                        <TextBlock FontSize="13" Margin="0 10 0 0" Text="{Binding CurrentApp.Size}"
+                                   Foreground="#A3ABBD" />
+                        <TextBlock FontSize="13" Margin="0 5 0 0" Text="{Binding CurrentApp.CreateTime}"
+                                   Foreground="#A3ABBD" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--详细信息-->
+            <Border Grid.Row="3" Background="White" Margin="20 20" CornerRadius="10" >
+
+            </Border>
+        </Grid>
+
+       
         <!--搜索结果-->
         <ListView Grid.Row="3" ItemsSource="{Binding SearchResultList}" Grid.Column="1" 
                   ItemContainerStyle="{StaticResource ItemStyle}" SelectedIndex="{Binding SelectIndex}"
-                  BorderThickness="0" Margin="30 10 30 0" Background="White">
+                  BorderThickness="0" Margin="30 10 30 0" Background="White" Name="ResultListView">
             <ListView.View>
                 <GridView ColumnHeaderContainerStyle="{StaticResource HeaderStyle}">
                     <GridViewColumn />

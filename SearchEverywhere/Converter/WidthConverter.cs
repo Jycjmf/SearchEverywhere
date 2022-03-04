@@ -11,7 +11,10 @@ namespace SearchEverywhere.Converter
             if (value != null)
             {
                 var res = int.Parse(value.ToString());
-                return res - 12;
+                if (parameter == null)
+                    parameter = 0;
+                if (res - long.Parse(parameter.ToString()) <= 10) return 90;
+                return res - long.Parse(parameter.ToString());
             }
 
             return 100;

@@ -28,6 +28,23 @@ public class MainViewModel : ObservableRecipient
         set
         {
             SetProperty(ref selectIndex, value);
+            Console.WriteLine(searchResultList.Count);
+            if (searchResultList.Count != 0 && value != -1)
+                CurrentApp = searchResultList[value];
+            else
+                CurrentApp = null;
+            OnPropertyChanged();
+        }
+    }
+
+    private ListItemModel currentApp;
+
+    public ListItemModel CurrentApp
+    {
+        get => currentApp;
+        set
+        {
+            SetProperty(ref currentApp, value);
             OnPropertyChanged();
         }
     }
@@ -59,21 +76,21 @@ public class MainViewModel : ObservableRecipient
         });
         EnterCommand = new RelayCommand(() =>
         {
-            if (searchResultList.Count == 0)
+            if (CurrentApp == null)
                 return;
-            ShowWindow(searchResultList[selectIndex].Hwnd, 0);
-            ShowWindow(searchResultList[selectIndex].Hwnd, 5);
+            ShowWindow(currentApp.Hwnd, 0);
+            ShowWindow(currentApp.Hwnd, 5);
         });
         UpCommand = new RelayCommand(() =>
         {
-            if (selectIndex == 0)
+            if (SelectIndex == 0)
                 SelectIndex = SearchResultList.Count - 1;
             else
                 SelectIndex--;
         });
         DownCommand = new RelayCommand(() =>
         {
-            if (selectIndex == SearchResultList.Count - 1)
+            if (SelectIndex == SearchResultList.Count - 1)
                 SelectIndex = 0;
             else
                 SelectIndex++;
@@ -114,7 +131,8 @@ public class MainViewModel : ObservableRecipient
         var temp = new List<ListItemModel>();
         foreach (var each in raw)
             temp.Add(new ListItemModel(each.Icon,
-                Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd));
+                Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd,
+                each.CreateTime, each.Size));
         SearchResultList = new ObservableCollection<ListItemModel>(temp);
         SelectIndex = 0;
     }
@@ -125,6 +143,7 @@ public class MainViewModel : ObservableRecipient
         set
         {
             SetProperty(ref runningAppsList, value);
+            CurrentApp = runningAppsList.First();
             OnPropertyChanged();
         }
     }
@@ -148,15 +167,30 @@ public class MainViewModel : ObservableRecipient
     private void GetTaskBarApps()
     {
         var processes = Process.GetProcesses();
-
         foreach (var item in processes)
             if (item.MainWindowTitle.Length > 0)
                 Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
                     var icon = IconUtility.GetIcon(item.MainModule.FileName);
-                    RunningAppsList.Add(new ListItemModel(icon, item.MainWindowTitle, item.MainWindowHandle));
-                    SearchResultList.Add(new ListItemModel(icon, item.MainWindowTitle, item.MainWindowHandle));
+                    var tempItem = new ListItemModel(icon, item.MainWindowTitle, item.MainWindowHandle,
+                        item.StartTime, GetRamUsage(item));
+                    RunningAppsList.Add(tempItem);
+                    SearchResultList.Add(tempItem);
+                    SelectIndex = 0;
                 });
+    }
+
+    private string GetRamUsage(Process process)
+    {
+        var memsize = 0; // memsize in KB
+        //var PC = new PerformanceCounter();
+        //PC.CategoryName = "Process";
+        //PC.CounterName = "Working Set - Private";
+        //PC.InstanceName = process.ProcessName;
+        //memsize = Convert.ToInt32(PC.NextValue()) / (1024 * 1024);
+        //PC.Close();
+        //PC.Dispose();
+        return $"{memsize} MB";
     }
 
     private void RegisterHotkey()
