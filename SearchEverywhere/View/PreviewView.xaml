@@ -5,7 +5,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        d:DesignHeight="450" d:DesignWidth="800">
+        d:DesignHeight="450" d:DesignWidth="800"
+        Width="800" Height="450"
+        DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
+    <Window.Resources>
+        <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">
+            <Setter Property="Background" Value="#FBFAFF" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridRow">
+                        <SelectiveScrollingGrid>
+                            <Border Background="{TemplateBinding Background}" />
+                            <DataGridCellsPresenter Foreground="Black" />
+                        </SelectiveScrollingGrid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#FBFAFF" />
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+
+            </Setter>
+
+        </Style>
+    </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="40"
@@ -18,32 +44,43 @@
             <RowDefinition Height="40" />
             <RowDefinition />
         </Grid.RowDefinitions>
-
+        <!--导航栏-->
         <Grid Background="White" WindowChrome.IsHitTestVisibleInChrome="False">
-            <!--Pin-->
-            <Button Name="FullScreenBtn" FontWeight="Bold" HorizontalAlignment="Left"
-                    Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
-                    WindowChrome.IsHitTestVisibleInChrome="True">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                    </Style>
-                </Button.Style>
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontSize="22"
-                                   FontFamily="../Fonts/#iconfont" Text="&#xe75d;"
-                                   Foreground="{TemplateBinding Foreground}" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" TargetName="FilterText"
-                                        Value="{StaticResource SecondaryBorderBrush}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
+
+            <StackPanel Margin="0 0 15 0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                        Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True">
+                <!--Pin-->
+                <Button Name="FullScreenBtn" FontWeight="Bold"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="22"
+                                       FontFamily="../Fonts/#iconfont" Text="&#xe75d;"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" TargetName="FilterText"
+                                            Value="{StaticResource SecondaryBorderBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <!--Zoom-->
+                <Border Height="2" Background="Black" Width="10" />
+                <Slider VerticalAlignment="Center" Width="150" Value="{Binding FontSize}" Maximum="100" Minimum="1"
+                        TabIndex="-1" />
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" FontWeight="Bold">+</TextBlock>
+                <TextBlock Text="{Binding FontSize}" VerticalAlignment="Center" HorizontalAlignment="Right"
+                           Margin="10 0" />
+            </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <!--Open Origin-->
                 <Button Name="OpenOriginBtn" FontWeight="Bold"
@@ -120,10 +157,26 @@
             </StackPanel>
 
         </Grid>
-        <!--Image Preview-->
-        <Grid Grid.Row="1" >
-            <hc:ImageViewer Background="{DynamicResource SecondaryRegionBrush}" ImageSource="../img/test.jpg"/>
 
+        <Grid Grid.Row="1">
+            <!--图片浏览器-->
+            <hc:ImageViewer Background="{DynamicResource SecondaryRegionBrush}" ImageSource="../img/test.jpg"
+                            Visibility="Hidden" />
+            <!--config浏览器-->
+            <DataGrid ItemsSource="{Binding ConfigList}" SelectionMode="Single" SelectionUnit="FullRow"
+                      AutoGenerateColumns="False" ColumnHeaderHeight="0" Background="#FBFAFF"
+                      RowStyle="{StaticResource DataGridRowStyle}" Visibility="Hidden">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Key}" FontWeight="Bold" Foreground="Blue" />
+                    <DataGridTextColumn Binding="{Binding Eachvalue}" FontWeight="Bold" Foreground="Black" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <!--TXT浏览器-->
+            <ScrollViewer Margin="20">
+                <TextBox Text="{Binding TextFile}" IsReadOnly="True"
+                         Background="Transparent" BorderThickness="0"
+                         FontSize="{Binding FontSize}" TextWrapping="WrapWithOverflow" />
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>
