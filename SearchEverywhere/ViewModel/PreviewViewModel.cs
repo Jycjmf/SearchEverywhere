@@ -14,10 +14,6 @@ public class PreviewViewModel : ObservableRecipient
     private int fontSize = 14;
     private string textFile;
 
-    public PreviewViewModel()
-    {
-        PreviewTxt(@"C:\Users\Jycjmf\Desktop\小工具\Bandicam\novel.txt");
-    }
 
     public int FontSize
     {

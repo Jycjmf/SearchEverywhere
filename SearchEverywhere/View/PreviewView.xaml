@@ -31,6 +31,25 @@
             </Setter>
 
         </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   FontFamily="../Fonts/#iconfont" Text="{TemplateBinding Content}"
+                                   Foreground="{TemplateBinding Foreground}" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" TargetName="FilterText"
+                                        Value="{StaticResource SecondaryBorderBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -51,28 +70,8 @@
                         Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True">
                 <!--Pin-->
                 <Button Name="FullScreenBtn" FontWeight="Bold"
-                        Height="30" Width="40" Foreground="Black" Cursor="Hand"
-                        WindowChrome.IsHitTestVisibleInChrome="True">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                        </Style>
-                    </Button.Style>
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       FontSize="22"
-                                       FontFamily="../Fonts/#iconfont" Text="&#xe75d;"
-                                       Foreground="{TemplateBinding Foreground}" />
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" TargetName="FilterText"
-                                            Value="{StaticResource SecondaryBorderBrush}" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" FontSize="22" Content="&#xe75d;"
+                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
                 <!--Zoom-->
                 <Border Height="2" Background="Black" Width="10" />
                 <Slider VerticalAlignment="Center" Width="150" Value="{Binding FontSize}" Maximum="100" Minimum="1"
@@ -84,76 +83,19 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <!--Open Origin-->
                 <Button Name="OpenOriginBtn" FontWeight="Bold"
-                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
-                        WindowChrome.IsHitTestVisibleInChrome="True">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                        </Style>
-                    </Button.Style>
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       FontSize="18"
-                                       FontFamily="../Fonts/#iconfont" Text="&#xea66;"
-                                       Foreground="{TemplateBinding Foreground}" />
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" TargetName="FilterText"
-                                            Value="{StaticResource SecondaryBorderBrush}" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0" Content="&#xea66;"
+                        FontSize="18"
+                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
                 <!--Open Folder-->
                 <Button Name="OpenBtn" FontWeight="Bold"
-                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
-                        WindowChrome.IsHitTestVisibleInChrome="True">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                        </Style>
-                    </Button.Style>
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       FontSize="18"
-                                       FontFamily="../Fonts/#iconfont" Text="&#xebdf;"
-                                       Foreground="{TemplateBinding Foreground}" />
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" TargetName="FilterText"
-                                            Value="{StaticResource SecondaryBorderBrush}" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0" Content="&#xebdf;"
+                        FontSize="18"
+                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
                 <!--Close-->
                 <Button Name="CloseBtn" FontWeight="Bold"
                         Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
-                        WindowChrome.IsHitTestVisibleInChrome="True">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                        </Style>
-                    </Button.Style>
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       FontSize="15"
-                                       FontFamily="../Fonts/#iconfont" Text="&#xe60a;"
-                                       Foreground="{TemplateBinding Foreground}" />
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" TargetName="FilterText"
-                                            Value="{StaticResource SecondaryBorderBrush}" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}"
+                        Content="&#xe60a;" FontSize="18" />
             </StackPanel>
 
         </Grid>
@@ -172,11 +114,58 @@
                 </DataGrid.Columns>
             </DataGrid>
             <!--TXT浏览器-->
-            <ScrollViewer Margin="20">
+            <ScrollViewer Margin="20" Visibility="Hidden">
                 <TextBox Text="{Binding TextFile}" IsReadOnly="True"
                          Background="Transparent" BorderThickness="0"
                          FontSize="{Binding FontSize}" TextWrapping="WrapWithOverflow" />
             </ScrollViewer>
+            <!--视频播放器-->
+
+            <Grid>
+                <MediaElement Source="C:\Users\Jycjmf\Desktop\Flyleaf-master\Sample.mp4" Stretch="None" />
+                <Border Name="ControlBorder" Background="Black" Height="50" VerticalAlignment="Bottom" CornerRadius="5"
+                        Opacity="0.5" Margin="200 0">
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Border.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="ControlBorder"
+                                                     Storyboard.TargetProperty="Opacity" From="0" To="0.5"
+                                                     Duration="0:0:0.1" AutoReverse="False" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Border.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ControlBorder"
+                                                                   Storyboard.TargetProperty="Opacity"
+                                                                   Duration="0:0:3" AutoReverse="False">
+                                        <DiscreteDoubleKeyFrame Value="0.5" KeyTime="0:0:0" />
+                                        <DiscreteDoubleKeyFrame Value="0.5" KeyTime="0:0:2.5" />
+                                        <LinearDoubleKeyFrame Value="0.0" KeyTime="0:0:3" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Border.Triggers>
+                    <DockPanel LastChildFill="True">
+                        <Button Name="PlayBtn" FontWeight="Bold"
+                                Height="30" Width="20" Foreground="White" Cursor="Hand" Margin="20 0 5 0"
+                                WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}"
+                                Content="&#xe6cf;" FontSize="18" />
+                        <Button Name="MuteBtn" FontWeight="Bold"
+                                Height="30" Width="20" Foreground="White" Cursor="Hand" Margin="10 0 5 0"
+                                WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}"
+                                Content="&#xe6e3;" FontSize="25" />
+                        <TextBlock Text="00:00" Foreground="White" VerticalAlignment="Center" Margin="10 0 10 0"></TextBlock>
+                        <TextBlock Text="00:51" Foreground="White" VerticalAlignment="Center" Margin="10 0 10 0" DockPanel.Dock="Right"></TextBlock>
+                        <Slider VerticalAlignment="Center" IsMoveToPointEnabled="True"></Slider>
+                    </DockPanel>
+          
+                </Border>
+            </Grid>
+
         </Grid>
     </Grid>
 </Window>
