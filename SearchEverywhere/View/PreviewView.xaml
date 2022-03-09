@@ -6,11 +6,72 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:converter="clr-namespace:SearchEverywhere.Converter.PreviewConverter"
         xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:xf="clr-namespace:XamlFlair;assembly=XamlFlair.WPF"
+        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
         Width="800" Height="450"
         DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
     <Window.Resources>
+        <converter:MatrixToDataViewConverter x:Key="MatrixToDataViewConverter"/>
+        <Style x:Key="WordLineStyle" TargetType="ListBoxItem">
+            <Setter Property="Margin" Value="25 0 25 0" />
+            <Setter Property="HorizontalAlignment"
+                    Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Align}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Text}"
+                                FontSize="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=DataContext.FontSize}" />
+                            <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Img}" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+
+            </Setter>
+        </Style>
+        <Style x:Key="ImageItemStyle" TargetType="ListBoxItem">
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <!--<TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Path}"></TextBlock>-->
+                        <DockPanel Margin="20 15 20 0">
+                            <TextBlock
+                                Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Index}"
+                                Foreground="{TemplateBinding Foreground}" FontWeight="Bold" Margin="0 0 10 0"
+                                FontSize="15" />
+                            <Grid>
+                                <!--<Border BorderThickness="2" BorderBrush="{TemplateBinding BorderBrush}">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="10" Direction="-45" Opacity="0.3" ShadowDepth="5"
+                                                          RenderingBias="Quality" />
+                                    </Border.Effect>
+                                    <Image
+                                        Source="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Path}"
+                                        RenderOptions.BitmapScalingMode="LowQuality" />
+                                </Border>-->
+                                <Border BorderThickness="2" BorderBrush="{TemplateBinding BorderBrush}">
+                                    <Image
+                                        Source="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Path}"
+                                        RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Border>
+                            </Grid>
+
+                        </DockPanel>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <converter:VideoTimeConverter x:Key="TimeConverter" />
         <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">
             <Setter Property="Background" Value="#FBFAFF" />
@@ -62,17 +123,14 @@
             GlassFrameThickness="5" />
     </WindowChrome.WindowChrome>
     <Grid>
-
-
         <!--导航栏-->
         <Grid Background="#FBFAFF">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Image Grid.ColumnSpan="2" Source="{Binding MusicTag.AlbumCover}" Opacity="0.1" Stretch="UniformToFill" />
+            <Image Grid.RowSpan="2" Source="{Binding MusicTag.AlbumCover}" Opacity="0.1" Stretch="UniformToFill" />
             <Grid Background="White" WindowChrome.IsHitTestVisibleInChrome="False">
-
                 <StackPanel Margin="0 0 15 0" HorizontalAlignment="Left" VerticalAlignment="Center"
                             Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True">
                     <!--Pin-->
@@ -128,8 +186,7 @@
                          FontSize="{Binding FontSize}" TextWrapping="WrapWithOverflow" />
             </ScrollViewer>
             <!--视频播放器-->
-
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Visibility="Hidden">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -205,7 +262,46 @@
 
                 </Border>
             </Grid>
+            <!--PPT浏览器-->
+            <Grid Grid.Row="1" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.4*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid Name="LoadingAnimationGird" Grid.ColumnSpan="2" Grid.Column="0"
+                      xf:Animations.AllowOpacityReset="False"
+                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn}}"
+                      xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOutAndSlideToRight},Event=None}"
+                      xf:Animations.SecondaryBinding="{Binding AnimationConfig.LoadingAnimation}">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <svgc:SvgViewbox Source="/img/icons/powerpoint.svg" Width="100" VerticalAlignment="Center" />
+                        <hc:LoadingLine Margin="0,30" Foreground="{StaticResource AccentBrush}"
+                                        Style="{StaticResource LoadingLineLarge}" />
+                    </StackPanel>
+                </Grid>
 
+                <ListBox ItemContainerStyle="{StaticResource ImageItemStyle}"
+                         ItemsSource="{Binding ImageItemList,Mode=OneWay}"
+                         SelectedIndex="{Binding SelectIndex}" Opacity="0"
+                         xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                         xf:Animations.PrimaryBinding="{Binding AnimationConfig.LoadingAnimation}" />
+                <Image Grid.Column="1" Margin="70 0" Name="CurrentPage" Source="{Binding CurrentImage}"
+                       RenderOptions.BitmapScalingMode="HighQuality" />
+                <Border Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource BorderBrush}"
+                        Width="{Binding ElementName=CurrentPage,Path=ActualWidth}"
+                        Height="{Binding ElementName=CurrentPage,Path=ActualHeight}" />
+                <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="8"
+                              Background="Transparent" />
+            </Grid>
+            <!--Word浏览器-->
+            <Grid Grid.Row="1">
+                <ListBox ItemContainerStyle="{StaticResource WordLineStyle}" ItemsSource="{Binding WordContentList}" />
+            </Grid>
+            <!--Excel浏览器-->
+            <Grid Grid.Row="1">
+                <DataGrid AutoGenerateColumns="True" ItemsSource="{Binding SheetContentMatrix,Converter={StaticResource MatrixToDataViewConverter}}" >
+                </DataGrid>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
