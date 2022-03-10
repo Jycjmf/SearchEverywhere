@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:SearchEverywhere.ViewModel"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             StartupUri="View/PreviewView.xaml">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="ViewModelLocator" />
@@ -19,12 +19,30 @@
             <!--<Color x:Key="BackgroundColor">#99CCFF</Color>-->
             <SolidColorBrush Color="#F9896B" x:Key="AccentBrush" />
             <system:UInt32 x:Key="BlurGradientValue">0xfFFFFF</system:UInt32>
-
             <SolidColorBrush Color="white" x:Key="IconBackgroundBrush" />
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       FontFamily="./Fonts/#iconfont" Text="{TemplateBinding Content}"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" TargetName="FilterText"
+                                            Value="{StaticResource SecondaryBorderBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
-                <ResourceDictionary Source="Animation.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Animation.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -391,8 +391,11 @@
     <Compile Include="Model\ListboxItemModel.cs" />
     <Compile Include="Model\ListItemModel.cs" />
     <Compile Include="Model\MusicTagModel.cs" />
+    <Compile Include="Model\PreviewModel.cs" />
+    <Compile Include="Model\PreviewUiElementModel.cs" />
     <Compile Include="Model\SuccessModel.cs" />
     <Compile Include="Model\VideoSliderModel.cs" />
+    <Compile Include="Model\VisibilityModel.cs" />
     <Compile Include="Model\WordContentModel.cs" />
     <Compile Include="Utility\HotKeyUtility.cs" />
     <Compile Include="Utility\IconUtility.cs" />
@@ -404,6 +407,9 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\PreviewView.xaml.cs">
       <DependentUpon>PreviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PreviewWindow.xaml.cs">
+      <DependentUpon>PreviewWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Animation.xaml">
       <SubType>Designer</SubType>
@@ -422,6 +428,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\PreviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

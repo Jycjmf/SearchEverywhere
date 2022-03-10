@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using SearchEverywhere.Model;
 using SearchEverywhere.Utility;
 
@@ -71,6 +72,12 @@ public class MainViewModel : ObservableRecipient
                 SelectIndex = 0;
             else
                 SelectIndex++;
+        });
+        PreviewCommand = new FlyleafLib.Controls.WPF.RelayCommand(e =>
+        {
+            WeakReferenceMessenger.Default.Send(
+                new PreviewUiElementModel(PreviewUiElementModel.PreviewUiElement.Image, true,
+                    @"C:\Users\Jycjmf\Desktop\test.jpg"), "StartPreview");
         });
     }
 
@@ -148,6 +155,7 @@ public class MainViewModel : ObservableRecipient
     public ICommand EnterCommand { get; }
     public ICommand UpCommand { get; }
     public ICommand DownCommand { get; }
+    public ICommand PreviewCommand { get; }
 
     [DllImport("user32.dll")]
     private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);

@@ -6,6 +6,7 @@
            xmlns:hc="https://handyorg.github.io/handycontrol"
            xmlns:converter="clr-namespace:SearchEverywhere.Converter"
            xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+           xmlns:localWindow="clr-namespace:SearchEverywhere.View"
            mc:Ignorable="d"
            xmlns:sys="clr-namespace:System;assembly=mscorlib"
            DataContext="{Binding Source={StaticResource ViewModelLocator},Path=mainViewModel}"
@@ -188,6 +189,7 @@
                 <hc:SearchBar.InputBindings>
                     <KeyBinding Gesture="UP" Command="{Binding UpCommand}" />
                     <KeyBinding Gesture="DOWN" Command="{Binding DownCommand}" />
+                    <KeyBinding Gesture="ENTER" Command="{Binding PreviewCommand}" />
                 </hc:SearchBar.InputBindings>
             </hc:SearchBar>
 
@@ -360,6 +362,11 @@
                     <DropShadowEffect BlurRadius="10" Direction="-45" Opacity="0.1" ShadowDepth="5"
                                       RenderingBias="Quality" />
                 </Border.Effect>
+            </Border>
+            <Border Grid.Row="4" Margin="20 10 20 20" CornerRadius="10" Background="White">
+                <localWindow:PreviewView
+                    Width="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Border},Path=ActualWidth}"
+                    Height="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Border},Path=ActualHeight}" />
             </Border>
         </Grid>
 

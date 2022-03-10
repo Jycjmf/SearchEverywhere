@@ -1,0 +1,60 @@
+﻿<Window x:Class="SearchEverywhere.View.PreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SearchEverywhere.View"
+        mc:Ignorable="d"
+        Title="PreviewWindow" Height="450" Width="800">
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="40"
+            CornerRadius="0"
+            ResizeBorderThickness="4"
+            GlassFrameThickness="5" />
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <local:PreviewView Width="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=Width}"
+                           Height="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=Height}" />
+        <!--导航栏-->
+        <Grid Background="Transparent" WindowChrome.IsHitTestVisibleInChrome="False" VerticalAlignment="Top"
+              Margin="0 5 0 0">
+            <StackPanel Margin="0 0 15 0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                        Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True">
+                <!--Pin-->
+                <Button Name="FullScreenBtn" FontWeight="Bold"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" FontSize="22" Content="&#xe75d;"
+                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
+                <!--Zoom-->
+                <Border Height="2" Background="Black" Width="10" />
+                <Slider VerticalAlignment="Center" Width="150" Value="{Binding   CurrentPreviewModel.FontSize}"
+                        Maximum="100" Minimum="1"
+                        TabIndex="-1" />
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" FontWeight="Bold">+</TextBlock>
+                <TextBlock Text="{Binding   CurrentPreviewModel.FontSize}" VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Margin="10 0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!--Open Origin-->
+                <Button Name="OpenOriginBtn" FontWeight="Bold"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
+                        Content="&#xea66;"
+                        FontSize="18"
+                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
+                <!--Open Folder-->
+                <Button Name="OpenBtn" FontWeight="Bold"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
+                        Content="&#xebdf;"
+                        FontSize="18"
+                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
+                <!--Close-->
+                <Button Name="CloseBtn" FontWeight="Bold"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
+                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}"
+                        Content="&#xe60a;" FontSize="18" />
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Window>

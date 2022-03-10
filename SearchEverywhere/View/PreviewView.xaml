@@ -1,19 +1,19 @@
-﻿<Window x:Class="SearchEverywhere.View.PreviewView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:hc="https://handyorg.github.io/handycontrol"
-        xmlns:converter="clr-namespace:SearchEverywhere.Converter.PreviewConverter"
-        xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:xf="clr-namespace:XamlFlair;assembly=XamlFlair.WPF"
-        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
-        mc:Ignorable="d"
-        d:DesignHeight="450" d:DesignWidth="800"
-        Width="800" Height="450"
-        DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
-    <Window.Resources>
-        <converter:MatrixToDataViewConverter x:Key="MatrixToDataViewConverter"/>
+﻿<UserControl x:Class="SearchEverywhere.View.PreviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:converter="clr-namespace:SearchEverywhere.Converter.PreviewConverter"
+             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:xf="clr-namespace:XamlFlair;assembly=XamlFlair.WPF"
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Width="800" Height="450"
+             DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
+    <UserControl.Resources>
+        <converter:MatrixToDataViewConverter x:Key="MatrixToDataViewConverter" />
         <Style x:Key="WordLineStyle" TargetType="ListBoxItem">
             <Setter Property="Margin" Value="25 0 25 0" />
             <Setter Property="HorizontalAlignment"
@@ -95,114 +95,64 @@
             </Setter>
 
         </Style>
-        <Style x:Key="ButtonStyle" TargetType="Button">
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontSize="{TemplateBinding FontSize}"
-                                   FontFamily="../Fonts/#iconfont" Text="{TemplateBinding Content}"
-                                   Foreground="{TemplateBinding Foreground}" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" TargetName="FilterText"
-                                        Value="{StaticResource SecondaryBorderBrush}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-    <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="40"
-            CornerRadius="0"
-            ResizeBorderThickness="4"
-            GlassFrameThickness="5" />
-    </WindowChrome.WindowChrome>
+
+    </UserControl.Resources>
+
     <Grid>
-        <!--导航栏-->
         <Grid Background="#FBFAFF">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
+                <RowDefinition Height="{Binding CurrentPreviewModel.TitleHeight}" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Image Grid.RowSpan="2" Source="{Binding MusicTag.AlbumCover}" Opacity="0.1" Stretch="UniformToFill" />
-            <Grid Background="White" WindowChrome.IsHitTestVisibleInChrome="False">
-                <StackPanel Margin="0 0 15 0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                            Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True">
-                    <!--Pin-->
-                    <Button Name="FullScreenBtn" FontWeight="Bold"
-                            Height="30" Width="40" Foreground="Black" Cursor="Hand" FontSize="22" Content="&#xe75d;"
-                            WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
-                    <!--Zoom-->
-                    <Border Height="2" Background="Black" Width="10" />
-                    <Slider VerticalAlignment="Center" Width="150" Value="{Binding FontSize}" Maximum="100" Minimum="1"
-                            TabIndex="-1" />
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" FontWeight="Bold">+</TextBlock>
-                    <TextBlock Text="{Binding FontSize}" VerticalAlignment="Center" HorizontalAlignment="Right"
-                               Margin="10 0" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <!--Open Origin-->
-                    <Button Name="OpenOriginBtn" FontWeight="Bold"
-                            Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
-                            Content="&#xea66;"
-                            FontSize="18"
-                            WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
-                    <!--Open Folder-->
-                    <Button Name="OpenBtn" FontWeight="Bold"
-                            Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
-                            Content="&#xebdf;"
-                            FontSize="18"
-                            WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
-                    <!--Close-->
-                    <Button Name="CloseBtn" FontWeight="Bold"
-                            Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
-                            WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}"
-                            Content="&#xe60a;" FontSize="18" />
-                </StackPanel>
-
-            </Grid>
+            <!--background-->
+            <Image Grid.RowSpan="2" Source="{Binding   CurrentPreviewModel.MusicTag.AlbumCover}" Opacity="0.1"
+                   Stretch="UniformToFill" />
             <!--图片浏览器-->
-            <hc:ImageViewer Grid.Row="1" Background="{DynamicResource SecondaryRegionBrush}"
-                            ImageSource="../img/test.jpg"
-                            Visibility="Hidden" />
+            <hc:ImageViewer Grid.Row="1" Background="{DynamicResource SecondaryRegionBrush}" ShowImgMap="True"
+                            ImageSource="{Binding CurrentPreviewModel.ImagePath}"
+                            Width="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=UserControl},Path=ActualWidth}"
+                            Height="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=UserControl},Path=ActualHeight}"
+                            Visibility="{Binding   CurrentPreviewModel.ElementVisibility.ImageVisibility}" />
             <!--config浏览器-->
-            <DataGrid Grid.Row="1" ItemsSource="{Binding ConfigList}" SelectionMode="Single" SelectionUnit="FullRow"
+            <DataGrid Grid.Row="1" ItemsSource="{Binding   CurrentPreviewModel.ConfigList}" SelectionMode="Single"
+                      SelectionUnit="FullRow"
                       AutoGenerateColumns="False" ColumnHeaderHeight="0" Background="#FBFAFF"
-                      RowStyle="{StaticResource DataGridRowStyle}" Visibility="Hidden">
+                      RowStyle="{StaticResource DataGridRowStyle}"
+                      Visibility="{Binding   CurrentPreviewModel.ElementVisibility.ConfigVisibility}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Key}" FontWeight="Bold" Foreground="Blue" />
                     <DataGridTextColumn Binding="{Binding Eachvalue}" FontWeight="Bold" Foreground="Black" />
                 </DataGrid.Columns>
             </DataGrid>
             <!--TXT浏览器-->
-            <ScrollViewer Grid.Row="1" Margin="20" Visibility="Hidden">
-                <TextBox Text="{Binding TextFile}" IsReadOnly="True"
+            <ScrollViewer Grid.Row="1" Margin="20"
+                          Visibility="{Binding   CurrentPreviewModel.ElementVisibility.TextVisibility}">
+                <TextBox Text="{Binding   CurrentPreviewModel.TextFile}" IsReadOnly="True"
                          Background="Transparent" BorderThickness="0"
-                         FontSize="{Binding FontSize}" TextWrapping="WrapWithOverflow" />
+                         FontSize="{Binding   CurrentPreviewModel.FontSize}" TextWrapping="WrapWithOverflow" />
             </ScrollViewer>
             <!--视频播放器-->
-            <Grid Grid.Row="1" Visibility="Hidden">
+            <Grid Grid.Row="1" Visibility="{Binding   CurrentPreviewModel.ElementVisibility.VideoVisibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <MediaElement Source="{Binding VideoPath}" Stretch="None" Name="VideoPlayer" LoadedBehavior="Manual"
+                <MediaElement Source="{Binding   CurrentPreviewModel.VideoPath}" Stretch="None" Name="VideoPlayer"
+                              LoadedBehavior="Manual"
                               Grid.ColumnSpan="2" />
-                <Image Source="{Binding MusicTag.AlbumCover}" RenderOptions.BitmapScalingMode="HighQuality" Margin="80">
+                <Image Source="{Binding   CurrentPreviewModel.MusicTag.AlbumCover}"
+                       RenderOptions.BitmapScalingMode="HighQuality" Margin="80">
                     <Image.Effect>
                         <DropShadowEffect BlurRadius="10" Direction="-45" Opacity="0.3" ShadowDepth="10" />
                     </Image.Effect>
                 </Image>
                 <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding MusicTag.Title}" FontWeight="Bold" FontSize="25"
+                    <TextBlock Text="{Binding   CurrentPreviewModel.MusicTag.Title}" FontWeight="Bold" FontSize="25"
                                VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding MusicTag.Artist}" FontSize="20" Margin="0 10" VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding MusicTag.Album}" FontSize="20" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding  CurrentPreviewModel.MusicTag.Artist}" FontSize="20" Margin="0 10"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding  CurrentPreviewModel.MusicTag.Album}" FontSize="20"
+                               VerticalAlignment="Center" />
 
                 </StackPanel>
 
@@ -243,13 +193,15 @@
                                 WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}"
                                 Content="&#xe6e3;" FontSize="25" />
                         <TextBlock
-                            Text="{Binding CurrentVideoInfo.CurrentTime,Converter={StaticResource TimeConverter}}"
+                            Text="{Binding   CurrentPreviewModel.CurrentVideoInfo.CurrentTime,Converter={StaticResource TimeConverter}}"
                             Foreground="White" VerticalAlignment="Center" Margin="10 0 10 0" />
-                        <TextBlock Text="{Binding CurrentVideoInfo.TotalTime,Converter={StaticResource TimeConverter}}"
-                                   Foreground="White" VerticalAlignment="Center" Margin="10 0 10 0"
-                                   DockPanel.Dock="Right" />
+                        <TextBlock
+                            Text="{Binding   CurrentPreviewModel.CurrentVideoInfo.TotalTime,Converter={StaticResource TimeConverter}}"
+                            Foreground="White" VerticalAlignment="Center" Margin="10 0 10 0"
+                            DockPanel.Dock="Right" />
                         <Slider Name="TimeSlider" VerticalAlignment="Center" IsMoveToPointEnabled="True"
-                                Maximum="{Binding SliderInfo.MaxValue}" Value="{Binding SliderInfo.CurrentValue}">
+                                Maximum="{Binding   CurrentPreviewModel.SliderInfo.MaxValue}"
+                                Value="{Binding   CurrentPreviewModel.SliderInfo.CurrentValue}">
                             <Behaviors:Interaction.Triggers>
                                 <Behaviors:EventTrigger EventName="PreviewMouseUp"
                                                         SourceObject="{Binding ElementName=TimeSlider}">
@@ -263,7 +215,7 @@
                 </Border>
             </Grid>
             <!--PPT浏览器-->
-            <Grid Grid.Row="1" Visibility="Collapsed">
+            <Grid Grid.Row="1" Visibility="{Binding   CurrentPreviewModel.ElementVisibility.PptVisibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.4*" />
                     <ColumnDefinition />
@@ -272,7 +224,7 @@
                       xf:Animations.AllowOpacityReset="False"
                       xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn}}"
                       xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOutAndSlideToRight},Event=None}"
-                      xf:Animations.SecondaryBinding="{Binding AnimationConfig.LoadingAnimation}">
+                      xf:Animations.SecondaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}">
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                         <svgc:SvgViewbox Source="/img/icons/powerpoint.svg" Width="100" VerticalAlignment="Center" />
                         <hc:LoadingLine Margin="0,30" Foreground="{StaticResource AccentBrush}"
@@ -281,11 +233,12 @@
                 </Grid>
 
                 <ListBox ItemContainerStyle="{StaticResource ImageItemStyle}"
-                         ItemsSource="{Binding ImageItemList,Mode=OneWay}"
-                         SelectedIndex="{Binding SelectIndex}" Opacity="0"
+                         ItemsSource="{Binding   CurrentPreviewModel.ImageItemList,Mode=OneWay}"
+                         SelectedIndex="{Binding   CurrentPreviewModel.SelectIndex}" Opacity="0"
                          xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
-                         xf:Animations.PrimaryBinding="{Binding AnimationConfig.LoadingAnimation}" />
-                <Image Grid.Column="1" Margin="70 0" Name="CurrentPage" Source="{Binding CurrentImage}"
+                         xf:Animations.PrimaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}" />
+                <Image Grid.Column="1" Margin="70 0" Name="CurrentPage"
+                       Source="{Binding   CurrentPreviewModel.CurrentImage}"
                        RenderOptions.BitmapScalingMode="HighQuality" />
                 <Border Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource BorderBrush}"
                         Width="{Binding ElementName=CurrentPage,Path=ActualWidth}"
@@ -294,14 +247,15 @@
                               Background="Transparent" />
             </Grid>
             <!--Word浏览器-->
-            <Grid Grid.Row="1">
-                <ListBox ItemContainerStyle="{StaticResource WordLineStyle}" ItemsSource="{Binding WordContentList}" />
+            <Grid Grid.Row="1" Visibility="{Binding   CurrentPreviewModel.ElementVisibility.WordVisibility}">
+                <ListBox ItemContainerStyle="{StaticResource WordLineStyle}"
+                         ItemsSource="{Binding   CurrentPreviewModel.WordContentList}" />
             </Grid>
             <!--Excel浏览器-->
-            <Grid Grid.Row="1">
-                <DataGrid AutoGenerateColumns="True" ItemsSource="{Binding SheetContentMatrix,Converter={StaticResource MatrixToDataViewConverter}}" >
-                </DataGrid>
+            <Grid Grid.Row="1" Visibility="{Binding   CurrentPreviewModel.ElementVisibility.ExcelVisibility}">
+                <DataGrid AutoGenerateColumns="True"
+                          ItemsSource="{Binding   CurrentPreviewModel.SheetContentMatrix,Converter={StaticResource MatrixToDataViewConverter}}" />
             </Grid>
         </Grid>
     </Grid>
-</Window>
+</UserControl>

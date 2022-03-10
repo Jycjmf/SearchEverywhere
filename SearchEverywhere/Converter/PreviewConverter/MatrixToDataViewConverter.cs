@@ -11,17 +11,18 @@ public class MatrixToDataViewConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var array = value as ObservableCollection<ObservableCollection<string>>;
-        if (array == null)
-            return null;
-        if (array.Count == 0)
-            return null;
         var t = new DataTable();
-        for (var i = 0; i < array.First().Count; i++) t.Columns.Add(i.ToString());
-        foreach (var eachRow in array)
+        if (value is not ObservableCollection<ObservableCollection<string>> array)
+            return t;
+        if (array.Count == 0)
+            return t;
+        for (var i = 0; i < array.Max(x => x.Count) + 1; i++) t.Columns.Add(i == 0 ? "Index" : i.ToString());
+        for (var eachRowIndex = 0; eachRowIndex < array.Count; eachRowIndex++)
         {
             var newRow = t.NewRow();
-            for (var i = 0; i < eachRow.Count; i++) newRow[i] = eachRow[i];
+            newRow[0] = eachRowIndex;
+            for (var colIndex = 0; colIndex < array[eachRowIndex].Count; colIndex++)
+                newRow[colIndex + 1] = array[eachRowIndex][colIndex];
 
             t.Rows.Add(newRow);
         }

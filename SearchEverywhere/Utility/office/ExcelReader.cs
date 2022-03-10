@@ -1,25 +1,39 @@
-﻿using System;
+﻿using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace SearchEverywhere.Utility.office;
 
 internal class ExcelReader
 {
-    public void ReadExcel(string path)
+    public async Task<ObservableCollection<ObservableCollection<string>>> ReadExcel(string path)
     {
-        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        var xls = new HSSFWorkbook(fs);
-        for (var i = 0; i < xls.NumberOfSheets; i++)
+        var targetMatrix = new ObservableCollection<ObservableCollection<string>>();
+        await Task.Run(() =>
         {
-            var sheet = xls.GetSheetAt(i);
-            for (var j = 0; j < sheet.LastRowNum; j++)
+            using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            IWorkbook xls = null;
+            if (Path.GetExtension(path) == ".xlsx")
+                xls = new XSSFWorkbook(fs);
+            else
+                xls = new HSSFWorkbook(fs);
+            for (var sheetIndex = 0; sheetIndex < xls.NumberOfSheets; sheetIndex++)
             {
-                var eachRow = sheet.GetRow(j);
-                Console.WriteLine(sheet.GetRow(j));
-            }
+                var sheet = xls.GetSheetAt(sheetIndex);
+                for (var rowIndex = 0; rowIndex < sheet.LastRowNum; rowIndex++)
+                {
+                    var eachRow = sheet.GetRow(rowIndex);
+                    var strRow = new ObservableCollection<string>();
+                    eachRow.Cells.ForEach(x => strRow.Add(x.ToString()));
+                    targetMatrix.Add(strRow);
+                }
 
-            Console.WriteLine(sheet);
-        }
+                break;
+            }
+        });
+        return targetMatrix;
     }
 }
