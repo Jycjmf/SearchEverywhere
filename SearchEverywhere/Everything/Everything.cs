@@ -4,7 +4,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using SearchEverywhere.Model;
+using SearchEverywhere.Utility;
 
 namespace SearchEverywhere.Everything;
 
@@ -62,33 +64,38 @@ public class Everything
     public static extern bool Everything_GetResultDateModified(uint nIndex, out long lpFileTime);
 
 
-    public List<ListItemModel> SearchFile(string keyword, uint limit = 50)
+    public async Task<SuccessModel<List<ListItemModel>>> SearchFileAsync(string keyword, uint limit = 2000)
     {
-        Everything_SetSearchW(keyword);
-
-        var isSuccess = Everything_QueryW(true);
-        if (!isSuccess)
-            return null;
-        var totalResCount = Everything_GetNumResults() <= limit ? Everything_GetNumResults() : limit;
-        var buffer = new StringBuilder(256);
-        var resList = new List<ListItemModel>();
-        for (uint i = 0; i < totalResCount; i++)
+        var resList = new SuccessModel<List<ListItemModel>>(true, new List<ListItemModel>());
+        await Task.Run(() =>
         {
-            if (resList.Count > 100)
-                break;
-            var title = Marshal.PtrToStringUni(Everything_GetResultFileName(i));
-            Everything_GetResultDateModified(i, out var date_modified);
-            Everything_GetResultSize(i, out var size);
-            if (size < 1)
-                continue;
-            Everything_GetResultFullPathName(i, buffer, 256);
-            var path = buffer.ToString();
-            var modifyTime = DateTime.FromFileTime(date_modified);
-            var sizeString = ConvertSize(size);
-            var extension = Path.GetExtension(path);
-            var svgIcon = ConvertIcon(extension);
-            resList.Add(new ListItemModel(null, title, IntPtr.Zero, modifyTime, sizeString, path, extension, svgIcon));
-        }
+            Everything_SetSearchW(keyword);
+            var isSuccess = Everything_QueryW(true);
+            if (!isSuccess)
+            {
+                resList.IsSuccess = false;
+                return;
+            }
+
+            var totalResCount = Everything_GetNumResults() <= limit ? Everything_GetNumResults() : limit;
+            var buffer = new StringBuilder(256);
+            for (uint i = 0; i < totalResCount; i++)
+            {
+                var title = Marshal.PtrToStringUni(Everything_GetResultFileName(i));
+                Everything_GetResultDateModified(i, out var date_modified);
+                Everything_GetResultSize(i, out var size);
+                if (size < 1024)
+                    continue;
+                Everything_GetResultFullPathName(i, buffer, 256);
+                var path = buffer.ToString();
+                var modifyTime = DateTime.FromFileTime(date_modified);
+                var sizeString = FileUtility.ConvertSize(size);
+                var extension = Path.GetExtension(path);
+                var svgIcon = ConvertIcon(extension);
+                resList.Result.Add(new ListItemModel(null, title, IntPtr.Zero, modifyTime, sizeString, path, extension,
+                    svgIcon));
+            }
+        });
 
         return resList;
     }
@@ -120,17 +127,8 @@ public class Everything
             return "img/icons/video.svg";
         if (Regex.Matches(extension, @"mp3|flac|m4a|wma|wav|ape", RegexOptions.IgnoreCase).Count > 0)
             return "img/icons/audio.svg";
+        if (Regex.Matches(extension, @"txt", RegexOptions.IgnoreCase).Count > 0)
+            return "img/icons/document.svg";
         return "img/icons/file.svg";
-    }
-
-    private string ConvertSize(long size)
-    {
-        if (size < 1024)
-            return $"{size} B";
-        if (size < 1024 * 1024)
-            return $"{Math.Round(size / 1024f, 1)} KB";
-        if (size < Math.Pow(1024, 3))
-            return $"{Math.Round(size / Math.Pow(1024, 2), 1)} MB";
-        return $"{Math.Round(size / Math.Pow(1024, 3), 1)} GB";
     }
 }

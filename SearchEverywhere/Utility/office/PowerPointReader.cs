@@ -18,12 +18,14 @@ internal class PowerPointReader
             try
             {
                 targetPath = Directory.GetCurrentDirectory() + "\\temp\\ppt";
-                if (Directory.Exists(targetPath)) Directory.Delete(targetPath, true);
+                if (Directory.Exists(targetPath))
+                    Directory.Delete(targetPath, true);
                 var pptApp = new Application();
-                var ppt = pptApp.Presentations.Open(path, WithWindow: MsoTriState.msoTrue);
+                var ppt = pptApp.Presentations.Open(path, WithWindow: MsoTriState.msoFalse);
                 Directory.CreateDirectory(targetPath);
                 foreach (Slide each in ppt.Slides)
                     each.Export($"{targetPath}\\{each.SlideIndex}.png", "png");
+                pptApp.Quit();
             }
             catch (Exception e)
             {

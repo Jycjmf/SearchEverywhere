@@ -5,12 +5,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
 using SearchEverywhere.Model;
 using SearchEverywhere.Utility;
 
@@ -18,11 +18,12 @@ namespace SearchEverywhere.ViewModel;
 
 public class MainViewModel : ObservableRecipient
 {
+    private const uint SW_RESTORE = 0x09;
     private static readonly Everything.Everything everything = new();
+    private readonly PreviewUtility previewUtility = new();
+    private readonly Timer searchPendingTimer;
     private ListItemModel currentApp;
-
     private string keyword;
-
     private ObservableCollection<ListItemModel> runningAppsList = new();
 
     private ObservableCollection<ListItemModel> searchResultList = new();
@@ -33,7 +34,8 @@ public class MainViewModel : ObservableRecipient
 
     public MainViewModel()
     {
-        Task.Run(GetTaskBarApps);
+        searchPendingTimer = new Timer(CheckSearchKeyword, null, 200, 0);
+        GetTaskBarApps();
         everything.InitSearch();
         ChangeItemCommand = new RelayCommand<object>(x => { Console.WriteLine(x); });
         InputCommand = new RelayCommand(() =>
@@ -56,8 +58,9 @@ public class MainViewModel : ObservableRecipient
         {
             if (CurrentApp == null)
                 return;
-            ShowWindow(currentApp.Hwnd, 0);
-            ShowWindow(currentApp.Hwnd, 5);
+            var style = GetWindowLong(currentApp.Hwnd, -16);
+            if ((style & 0x20000000) == 0x20000000) ShowWindow(currentApp.Hwnd, SW_RESTORE);
+            SetForegroundWindow(currentApp.Hwnd);
         });
         UpCommand = new RelayCommand(() =>
         {
@@ -73,11 +76,10 @@ public class MainViewModel : ObservableRecipient
             else
                 SelectIndex++;
         });
-        PreviewCommand = new FlyleafLib.Controls.WPF.RelayCommand(e =>
+        PreviewCommand = new RelayCommand(() =>
         {
-            WeakReferenceMessenger.Default.Send(
-                new PreviewUiElementModel(PreviewUiElementModel.PreviewUiElement.Image, true,
-                    @"C:\Users\Jycjmf\Desktop\test.jpg"), "StartPreview");
+            if (CurrentApp != null)
+                previewUtility.TryToPreview(CurrentApp.Path);
         });
     }
 
@@ -123,7 +125,8 @@ public class MainViewModel : ObservableRecipient
         {
             SetProperty(ref keyword, value);
             StartProcessSearch(value);
-            StartFileSearch(value);
+            if (SelectedItem[0] || SelectedItem[3])
+                searchPendingTimer.Change(200, 0);
             CurrentApp = SearchResultList.First();
             OnPropertyChanged();
         }
@@ -157,8 +160,22 @@ public class MainViewModel : ObservableRecipient
     public ICommand DownCommand { get; }
     public ICommand PreviewCommand { get; }
 
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
     [DllImport("user32.dll")]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    private static extern int ShowWindow(IntPtr hWnd, uint Msg);
+
+    [DllImport("User32.dll")]
+    public static extern int SetForegroundWindow(IntPtr hWnd);
+
+    private void CheckSearchKeyword(object state)
+    {
+        if (string.IsNullOrWhiteSpace(Keyword))
+            return;
+        StartFileSearch(Keyword);
+    }
+
 
     private void StartProcessSearch(string keyword)
     {
@@ -171,50 +188,68 @@ public class MainViewModel : ObservableRecipient
             temp.Add(new ListItemModel(each.Icon,
                 Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd,
                 each.CreateTime, each.Size, each.Path, each.Extension, each.SvgIcon));
-        //SearchResultList = new ObservableCollection<ListItemModel>(temp);
         SearchResultList.Clear();
         temp.ForEach(x => SearchResultList.Add(x));
         SelectIndex = 0;
     }
 
-    private void StartFileSearch(string keyword)
+    private async Task StartFileSearch(string keyword)
     {
         if (string.IsNullOrWhiteSpace(keyword))
             return;
-        var res = everything.SearchFile(keyword);
-        if (res?.Count() == 0)
+
+        var res = await everything.SearchFileAsync(keyword);
+        if (res?.Result.Count == 0)
             return;
-        res.ForEach(x => SearchResultList.Add(x));
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            var tempList = SearchResultList.Where(x => x.Path == null).ToList();
+            res.Result.Take(20).ToList().ForEach(x => tempList.Add(x));
+            SearchResultList.Clear();
+            tempList.ForEach(x => { SearchResultList.Add(x); });
+        });
     }
 
-    private void GetTaskBarApps()
+    private async Task GetTaskBarApps()
     {
+        var tempList = new List<ListItemModel>();
         var processes = Process.GetProcesses();
         foreach (var item in processes)
             if (item.MainWindowTitle.Length > 0)
-                Application.Current.Dispatcher.InvokeAsync(async () =>
-                {
-                    var icon = IconUtility.GetIcon(item.MainModule.FileName);
-                    var tempItem = new ListItemModel(icon, item.MainWindowTitle, item.MainWindowHandle,
-                        item.StartTime, GetRamUsage(item), null, null, null);
-                    RunningAppsList.Add(tempItem);
-                    SearchResultList.Add(tempItem);
-                    SelectIndex = 0;
-                });
+            {
+                if (item.MainModule == null) continue;
+                var icon = IconUtility.GetIcon(item.MainModule.FileName);
+                var tempItem = new ListItemModel(icon, item.MainWindowTitle, item.MainWindowHandle,
+                    item.StartTime, await GetRamUsage(item), null, null, null);
+                tempList.Add(tempItem);
+            }
+
+        tempList.ForEach(x =>
+        {
+            RunningAppsList.Add(x);
+            SearchResultList.Add(x);
+        });
+        SelectIndex = 0;
     }
 
 
-    private string GetRamUsage(Process process)
+    private async Task<string> GetRamUsage(Process process)
     {
         var memsize = 0; // memsize in KB
-        //var PC = new PerformanceCounter();
-        //PC.CategoryName = "Process";
-        //PC.CounterName = "Working Set - Private";
-        //PC.InstanceName = process.ProcessName;
-        //memsize = Convert.ToInt32(PC.NextValue()) / (1024 * 1024);
-        //PC.Close();
-        //PC.Dispose();
-        return $"{memsize} MB";
+        var PC = new PerformanceCounter();
+        var memoryString = string.Empty;
+        await Task.Run(() =>
+        {
+            PC.CategoryName = "Process";
+            PC.CounterName = "Working Set - Private";
+            PC.InstanceName = process.ProcessName;
+            memsize = Convert.ToInt32(PC.NextValue());
+            memoryString = FileUtility.ConvertSize(memsize);
+            PC.Close();
+            PC.Dispose();
+        });
+
+        return memoryString;
     }
 
     private void RegisterHotkey()

@@ -1,30 +1,108 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace SearchEverywhere.Model;
 
 public class PreviewModel : ObservableObject
 {
+    private int albumMargin = 35;
     private AnimationModel animationConfig = new();
     private ObservableCollection<KeyValueModel> configList = new();
     private string currentImage;
     private CurrentTimeModel currentVideoInfo = new(TimeSpan.Zero, TimeSpan.Zero);
     private VisibilityModel elementVisibility = new();
+    private Visibility firstTipsVisibility = Visibility.Visible;
     private int fontSize = 14;
 
     private ObservableCollection<ListboxItemModel> imageItemList = new();
     private string imagePath;
 
     private MusicTagModel musicTag = new();
+    private string promptText = "↑、↓键选择一个文件\n使用Ctrl+Enter进行预览吧";
+    private Visibility secTipsVisibility = Visibility.Collapsed;
 
     private int selectIndex;
     private ObservableCollection<ObservableCollection<string>> sheetContentMatrix = new();
     private VideoSliderModel sliderInfo = new(0, 1);
+    private int sliderMargin = 10;
+    private int subTitleFontSize = 20;
     private string textFile;
+    private int titleFontSize = 25;
     private int titleHeight;
     private string videoPath;
     private ObservableCollection<WordContentModel> wordContentList = new();
+
+    public Visibility SecTipsVisibility
+    {
+        get => secTipsVisibility;
+        set
+        {
+            SetProperty(ref secTipsVisibility, value);
+            OnPropertyChanged();
+        }
+    }
+
+    public Visibility FirstTipsVisibility
+    {
+        get => firstTipsVisibility;
+        set
+        {
+            SetProperty(ref firstTipsVisibility, value);
+            OnPropertyChanged();
+        }
+    }
+
+    public string PromptText
+    {
+        get => promptText;
+        set
+        {
+            SetProperty(ref promptText, value);
+            OnPropertyChanged();
+        }
+    }
+
+    public int SliderMargin
+    {
+        get => sliderMargin;
+        set
+        {
+            SetProperty(ref sliderMargin, value);
+            OnPropertyChanged();
+        }
+    }
+
+    public int AlbumMargin
+    {
+        get => albumMargin;
+        set
+        {
+            SetProperty(ref albumMargin, value);
+            OnPropertyChanged();
+        }
+    }
+
+    public int SubTitleFontSize
+    {
+        get => subTitleFontSize;
+        set
+        {
+            SetProperty(ref subTitleFontSize, value);
+            OnPropertyChanged();
+        }
+    }
+
+    public int TitleFontSize
+    {
+        get => titleFontSize;
+        set
+        {
+            SetProperty(ref titleFontSize, value);
+            OnPropertyChanged();
+        }
+    }
 
     public int TitleHeight
     {

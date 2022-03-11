@@ -13,6 +13,8 @@
              Width="800" Height="450"
              DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
     <UserControl.Resources>
+        <converter:ReverseBooleanConverter x:Key="ReverseBooleanConverter" />
+        <converter:ImageConverter x:Key="ImageConverter" />
         <converter:MatrixToDataViewConverter x:Key="MatrixToDataViewConverter" />
         <Style x:Key="WordLineStyle" TargetType="ListBoxItem">
             <Setter Property="Margin" Value="25 0 25 0" />
@@ -24,6 +26,7 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock
                                 Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Text}"
+                                TextWrapping="WrapWithOverflow"
                                 FontSize="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=DataContext.FontSize}" />
                             <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Img}" />
                         </StackPanel>
@@ -55,7 +58,7 @@
                                 </Border>-->
                                 <Border BorderThickness="2" BorderBrush="{TemplateBinding BorderBrush}">
                                     <Image
-                                        Source="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Path}"
+                                        Source="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Path,Converter={StaticResource ImageConverter}}"
                                         RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Border>
                             </Grid>
@@ -106,7 +109,7 @@
             </Grid.RowDefinitions>
             <!--background-->
             <Image Grid.RowSpan="2" Source="{Binding   CurrentPreviewModel.MusicTag.AlbumCover}" Opacity="0.1"
-                   Stretch="UniformToFill" />
+                   Stretch="UniformToFill" Visibility="{Binding CurrentPreviewModel.ElementVisibility.VideoVisibility}" />
             <!--图片浏览器-->
             <hc:ImageViewer Grid.Row="1" Background="{DynamicResource SecondaryRegionBrush}" ShowImgMap="True"
                             ImageSource="{Binding CurrentPreviewModel.ImagePath}"
@@ -125,40 +128,67 @@
                 </DataGrid.Columns>
             </DataGrid>
             <!--TXT浏览器-->
-            <ScrollViewer Grid.Row="1" Margin="20"
-                          Visibility="{Binding   CurrentPreviewModel.ElementVisibility.TextVisibility}">
-                <TextBox Text="{Binding   CurrentPreviewModel.TextFile}" IsReadOnly="True"
-                         Background="Transparent" BorderThickness="0"
-                         FontSize="{Binding   CurrentPreviewModel.FontSize}" TextWrapping="WrapWithOverflow" />
-            </ScrollViewer>
+            <Grid Grid.Row="1" Margin="20"
+                  Visibility="{Binding   CurrentPreviewModel.ElementVisibility.TextVisibility}">
+                <Grid>
+                    <ScrollViewer
+                        xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                        xf:Animations.PrimaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}"
+                        xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                        xf:Animations.SecondaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,
+                    Converter={StaticResource ReverseBooleanConverter}}">
+                        <TextBox Text="{Binding   CurrentPreviewModel.TextFile}" IsReadOnly="True"
+                                 Background="Transparent" BorderThickness="0"
+                                 FontSize="{Binding   CurrentPreviewModel.FontSize}" TextWrapping="WrapWithOverflow" />
+                    </ScrollViewer>
+
+                    <!--加载动画-->
+                    <Grid xf:Animations.AllowOpacityReset="False"
+                          xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                          xf:Animations.PrimaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,Converter={StaticResource ReverseBooleanConverter}}"
+                          xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                          xf:Animations.SecondaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <svgc:SvgViewbox Source="/img/icons/document.svg" Width="100" VerticalAlignment="Center" />
+                            <hc:LoadingLine Margin="0,30" Foreground="{StaticResource AccentBrush}"
+                                            Style="{StaticResource LoadingLineLarge}" />
+                        </StackPanel>
+                    </Grid>
+
+                </Grid>
+            </Grid>
             <!--视频播放器-->
             <Grid Grid.Row="1" Visibility="{Binding   CurrentPreviewModel.ElementVisibility.VideoVisibility}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <MediaElement Source="{Binding   CurrentPreviewModel.VideoPath}" Stretch="None" Name="VideoPlayer"
+                <MediaElement Source="{Binding   CurrentPreviewModel.VideoPath}" Stretch="UniformToFill"
+                              Name="VideoPlayer"
                               LoadedBehavior="Manual"
                               Grid.ColumnSpan="2" />
                 <Image Source="{Binding   CurrentPreviewModel.MusicTag.AlbumCover}"
-                       RenderOptions.BitmapScalingMode="HighQuality" Margin="80">
+                       RenderOptions.BitmapScalingMode="HighQuality" Margin="{Binding CurrentPreviewModel.AlbumMargin}">
                     <Image.Effect>
                         <DropShadowEffect BlurRadius="10" Direction="-45" Opacity="0.3" ShadowDepth="10" />
                     </Image.Effect>
                 </Image>
                 <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding   CurrentPreviewModel.MusicTag.Title}" FontWeight="Bold" FontSize="25"
+                    <TextBlock Text="{Binding   CurrentPreviewModel.MusicTag.Title}" FontWeight="Bold"
+                               FontSize="{Binding CurrentPreviewModel.TitleFontSize}"
                                VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding  CurrentPreviewModel.MusicTag.Artist}" FontSize="20" Margin="0 10"
+                    <TextBlock Text="{Binding  CurrentPreviewModel.MusicTag.Artist}"
+                               FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}" Margin="0 10"
                                VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding  CurrentPreviewModel.MusicTag.Album}" FontSize="20"
+                    <TextBlock Text="{Binding  CurrentPreviewModel.MusicTag.Album}"
+                               FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}"
                                VerticalAlignment="Center" />
 
                 </StackPanel>
 
                 <!--进度条-->
                 <Border Name="ControlBorder" Background="Black" Height="50" VerticalAlignment="Bottom" CornerRadius="5"
-                        Opacity="0.5" Margin="200 0" Grid.ColumnSpan="2">
+                        Opacity="0.5" Margin="20 0" Grid.ColumnSpan="2">
                     <Border.Triggers>
                         <EventTrigger RoutedEvent="Border.MouseEnter">
                             <BeginStoryboard>
@@ -220,10 +250,11 @@
                     <ColumnDefinition Width="0.4*" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid Name="LoadingAnimationGird" Grid.ColumnSpan="2" Grid.Column="0"
+                <Grid Name="LoadingAnimationGird" Grid.ColumnSpan="2"
                       xf:Animations.AllowOpacityReset="False"
-                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn}}"
-                      xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOutAndSlideToRight},Event=None}"
+                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                      xf:Animations.PrimaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,Converter={StaticResource ReverseBooleanConverter}}"
+                      xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
                       xf:Animations.SecondaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}">
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                         <svgc:SvgViewbox Source="/img/icons/powerpoint.svg" Width="100" VerticalAlignment="Center" />
@@ -232,13 +263,15 @@
                     </StackPanel>
                 </Grid>
 
-                <ListBox ItemContainerStyle="{StaticResource ImageItemStyle}"
+                <ListBox ItemContainerStyle="{StaticResource ImageItemStyle}" Background="Transparent"
                          ItemsSource="{Binding   CurrentPreviewModel.ImageItemList,Mode=OneWay}"
                          SelectedIndex="{Binding   CurrentPreviewModel.SelectIndex}" Opacity="0"
                          xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
-                         xf:Animations.PrimaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}" />
-                <Image Grid.Column="1" Margin="70 0" Name="CurrentPage"
-                       Source="{Binding   CurrentPreviewModel.CurrentImage}"
+                         xf:Animations.PrimaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}"
+                         xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                         xf:Animations.SecondaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,Converter={StaticResource ReverseBooleanConverter}}" />
+                <Image Grid.Column="1" Margin="{Binding CurrentPreviewModel.SliderMargin}" Name="CurrentPage"
+                       Source="{Binding   CurrentPreviewModel.CurrentImage,Converter={StaticResource ImageConverter}}"
                        RenderOptions.BitmapScalingMode="HighQuality" />
                 <Border Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource BorderBrush}"
                         Width="{Binding ElementName=CurrentPage,Path=ActualWidth}"
@@ -248,13 +281,85 @@
             </Grid>
             <!--Word浏览器-->
             <Grid Grid.Row="1" Visibility="{Binding   CurrentPreviewModel.ElementVisibility.WordVisibility}">
+                <!--加载动画-->
+                <Grid xf:Animations.AllowOpacityReset="False"
+                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                      xf:Animations.PrimaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,Converter={StaticResource ReverseBooleanConverter}}"
+                      xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                      xf:Animations.SecondaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <svgc:SvgViewbox Source="/img/icons/word.svg" Width="100" VerticalAlignment="Center" />
+                        <hc:LoadingLine Margin="0,30" Foreground="{StaticResource AccentBrush}"
+                                        Style="{StaticResource LoadingLineLarge}" />
+                    </StackPanel>
+                </Grid>
                 <ListBox ItemContainerStyle="{StaticResource WordLineStyle}"
-                         ItemsSource="{Binding   CurrentPreviewModel.WordContentList}" />
+                         ItemsSource="{Binding   CurrentPreviewModel.WordContentList}"
+                         xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                         xf:Animations.PrimaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}"
+                         xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                         xf:Animations.SecondaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,
+                    Converter={StaticResource ReverseBooleanConverter}}" />
             </Grid>
             <!--Excel浏览器-->
             <Grid Grid.Row="1" Visibility="{Binding   CurrentPreviewModel.ElementVisibility.ExcelVisibility}">
+                <!--加载动画-->
+                <Grid xf:Animations.AllowOpacityReset="False"
+                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                      xf:Animations.PrimaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,Converter={StaticResource ReverseBooleanConverter}}"
+                      xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                      xf:Animations.SecondaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <svgc:SvgViewbox Source="/img/icons/table.svg" Width="100" VerticalAlignment="Center" />
+                        <hc:LoadingLine Margin="0,30" Foreground="{StaticResource AccentBrush}"
+                                        Style="{StaticResource LoadingLineLarge}" />
+                    </StackPanel>
+                </Grid>
                 <DataGrid AutoGenerateColumns="True"
-                          ItemsSource="{Binding   CurrentPreviewModel.SheetContentMatrix,Converter={StaticResource MatrixToDataViewConverter}}" />
+                          ItemsSource="{Binding   CurrentPreviewModel.SheetContentMatrix,Converter={StaticResource MatrixToDataViewConverter}}"
+                          xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                          xf:Animations.PrimaryBinding="{Binding   CurrentPreviewModel.AnimationConfig.LoadingAnimation}"
+                          xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                          xf:Animations.SecondaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,
+                    Converter={StaticResource ReverseBooleanConverter}}" />
+            </Grid>
+            <Grid Grid.Row="1" Visibility="{Binding CurrentPreviewModel.ElementVisibility.UnknownVisibility}">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <svgc:SvgViewbox Source="/img/icons/unknown.svg" Width="100" Height="100"
+                                     VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0"
+                                Visibility="{Binding CurrentPreviewModel.FirstTipsVisibility}">
+                        <TextBlock FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Text="输入关键词后" />
+                        <Border Background="{StaticResource BorderBrush}" Width="30" Height="20" Margin="5 0 0 0"
+                                CornerRadius="5">
+                            <TextBlock FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
+                                       Text="↑" />
+                        </Border>
+                        <Border Background="{StaticResource BorderBrush}" Width="30" Height="20" Margin="5 0"
+                                CornerRadius="5">
+                            <TextBlock FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
+                                       Text="↓" />
+                        </Border>
+                        <TextBlock FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Text="键选择一个文件" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 5 0 0"
+                                Visibility="{Binding CurrentPreviewModel.FirstTipsVisibility}">
+                        <Border Background="{StaticResource BorderBrush}" Width="70" Height="20" CornerRadius="5">
+                            <TextBlock FontSize="15"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
+                                       Text="Ctrl + Alt" />
+                        </Border>
+                        <TextBlock FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Text="进行快速预览吧" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding CurrentPreviewModel.PromptText}" TextAlignment="Center" Margin="0 20 0 0"
+                               FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}" HorizontalAlignment="Center"
+                               Visibility="{Binding CurrentPreviewModel.SecTipsVisibility}" />
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>

@@ -22,7 +22,6 @@ internal class WordReader
             {
                 using var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var doc = new XWPFDocument(file);
-
                 foreach (var each in doc.BodyElements)
                     if (each.GetType() == typeof(XWPFParagraph))
                     {
@@ -40,7 +39,7 @@ internal class WordReader
             catch (Exception e)
             {
                 res.IsSuccess = false;
-                Console.WriteLine(e);
+                res.Msg = e.Message;
             }
         });
         return res;

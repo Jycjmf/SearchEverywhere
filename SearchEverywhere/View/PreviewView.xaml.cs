@@ -20,12 +20,12 @@ public partial class PreviewView
     {
         InitializeComponent();
         timer.Tick += TimerEvent;
-        WeakReferenceMessenger.Default.Register<PreviewView, string, string>(this, "PausePlayToken",
+        WeakReferenceMessenger.Default.Register<PreviewView, PlayStatusModel, string>(this, "PausePlayToken",
             (r, msg) =>
             {
-                switch (msg)
+                switch (msg.CurrentStatus)
                 {
-                    case "play":
+                    case PlayStatusModel.Status.Play when msg.ForcePlay == false:
                         if (!IsPlaying)
                         {
                             timer.Start();
@@ -42,7 +42,14 @@ public partial class PreviewView
                         }
 
                         break;
-                    case "stop":
+                    case PlayStatusModel.Status.Play when msg.ForcePlay:
+                        timer.Start();
+                        r.VideoPlayer.Stop();
+                        r.VideoPlayer.Play();
+                        IsPlaying = !IsPlaying;
+                        PlayBtn.Content = "\ue718";
+                        break;
+                    case PlayStatusModel.Status.Stop:
                         r.VideoPlayer.Stop();
                         break;
                 }
@@ -86,7 +93,8 @@ public partial class PreviewView
 
     private void TimerEvent(object sender, EventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new CurrentTimeModel(VideoPlayer.Position,
-            VideoPlayer.NaturalDuration.TimeSpan), "ChangeVideoTimeToken");
+        if (VideoPlayer.NaturalDuration.HasTimeSpan)
+            WeakReferenceMessenger.Default.Send(new CurrentTimeModel(VideoPlayer.Position,
+                VideoPlayer.NaturalDuration.TimeSpan), "ChangeVideoTimeToken");
     }
 }

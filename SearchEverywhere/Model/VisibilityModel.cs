@@ -14,12 +14,23 @@ public class VisibilityModel : ObservableObject
     private Visibility sliderVisibility = Visibility.Collapsed;
 
     private Visibility textVisibility = Visibility.Collapsed;
+    private Visibility unknownVisibility = Visibility.Visible;
 
     private Visibility videoVisibility = Visibility.Collapsed;
 
     private Visibility wordVisibility = Visibility.Collapsed;
 
-    public Visibility Var
+    public Visibility UnknownVisibility
+    {
+        get => unknownVisibility;
+        set
+        {
+            SetProperty(ref unknownVisibility, value);
+            OnPropertyChanged();
+        }
+    }
+
+    public Visibility SliderVisibility
     {
         get => sliderVisibility;
         set

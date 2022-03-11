@@ -10,7 +10,9 @@ public class PreviewUiElementModel
         Config,
         Ppt,
         Word,
-        Excel
+        Excel,
+        Audio,
+        Unknown
     }
 
     public PreviewUiElementModel(PreviewUiElement elementName, bool isSmallWindow, string path)

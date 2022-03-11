@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,7 +25,9 @@ public class PreviewViewModel : ObservableRecipient
 
     public PreviewViewModel()
     {
-        PauseCommand = new RelayCommand(str => WeakReferenceMessenger.Default.Send("play", "PausePlayToken"));
+        PauseCommand = new RelayCommand(str =>
+            WeakReferenceMessenger.Default.Send(new PlayStatusModel(PlayStatusModel.Status.Play, false),
+                "PausePlayToken"));
         WeakReferenceMessenger.Default.Register<PreviewViewModel, CurrentTimeModel, string>(this,
             "ChangeVideoTimeToken", (r, msg) =>
             {
@@ -55,6 +58,41 @@ public class PreviewViewModel : ObservableRecipient
                         ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Image);
                         CurrentPreviewModel.ImagePath = msg.Path;
                         break;
+                    case PreviewUiElementModel.PreviewUiElement.Video:
+                        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Video);
+                        PreviewVideo(msg.Path);
+                        break;
+                    case PreviewUiElementModel.PreviewUiElement.Audio:
+                        SwitchLayout(msg.IsSmallWindow);
+                        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Video);
+                        PreviewAudio(msg.Path);
+                        break;
+                    case PreviewUiElementModel.PreviewUiElement.Excel:
+                        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Excel);
+                        PreviewExcel(msg.Path);
+                        break;
+                    case PreviewUiElementModel.PreviewUiElement.Ppt:
+                        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Ppt);
+                        PreviewPowerPoint(msg.Path);
+                        break;
+                    case PreviewUiElementModel.PreviewUiElement.Word:
+                        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Word);
+                        PreviewWord(msg.Path);
+                        break;
+                    case PreviewUiElementModel.PreviewUiElement.Config:
+                        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Config);
+                        PreviewConfig(msg.Path);
+                        break;
+                    case PreviewUiElementModel.PreviewUiElement.Text:
+                        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Text);
+                        PreviewTxt(msg.Path);
+                        break;
+                    case PreviewUiElementModel.PreviewUiElement.Unknown:
+                        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Unknown);
+                        CurrentPreviewModel.FirstTipsVisibility = Visibility.Collapsed;
+                        CurrentPreviewModel.SecTipsVisibility = Visibility.Visible;
+                        CurrentPreviewModel.PromptText = "暂不支持的格式";
+                        break;
                 }
             });
         WeakReferenceMessenger.Default.Register<PreviewViewModel, string, string>(this, "ConvertFullDisplayMode",
@@ -65,14 +103,7 @@ public class PreviewViewModel : ObservableRecipient
                 else
                     CurrentPreviewModel.TitleHeight = 0;
             });
-        // PreviewVideo(@"C:\Users\Jycjmf\Desktop\Flyleaf-master\Sample.mp4");
-        // PreviewAudio(@"G:\小米5备份\音乐\佐橋俊彦 - 正义と自由.mp3");
-        //PreviewAudio(@"D:\音乐\后来的我们-五月天.flac");
-        //PreviewPowerPoint(@"C:\Users\Jycjmf\Desktop\1.pptx");
-        //   PreviewPowerPoint(@"C:\Users\Jycjmf\Desktop\个人简历\金雨晨-院长奖学金答辩_1.pptx");
-        //PreviewWord(@"C:\Users\Jycjmf\Desktop\作业一 (1).docx");
-        //PreviewExcel(@"C:\Users\Jycjmf\Desktop\大创.xls");
-        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Image);
+        ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Unknown);
     }
 
     public PreviewModel CurrentPreviewModel
@@ -92,9 +123,37 @@ public class PreviewViewModel : ObservableRecipient
 
     public ICommand PauseCommand { get; }
 
+    private void SwitchLayout(bool isSmall)
+    {
+        if (isSmall)
+        {
+            CurrentPreviewModel.TitleFontSize = 18;
+            CurrentPreviewModel.SubTitleFontSize = 15;
+            CurrentPreviewModel.AlbumMargin = 35;
+            CurrentPreviewModel.SliderMargin = 10;
+        }
+        else
+        {
+            CurrentPreviewModel.TitleFontSize = 25;
+            CurrentPreviewModel.SubTitleFontSize = 20;
+            CurrentPreviewModel.AlbumMargin = 100;
+            CurrentPreviewModel.SliderMargin = 100;
+        }
+    }
+
     private void PreviewTxt(string path)
     {
-        CurrentPreviewModel.TextFile = File.ReadAllText(path);
+        CurrentPreviewModel.AnimationConfig.LoadingAnimation = false;
+        using var fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var bs = new BufferedStream(fs);
+        using var sr = new StreamReader(bs, Encoding.Default, true);
+        var line = string.Empty;
+        var resList = new List<string>();
+        while ((line = sr.ReadLine()) != null && resList.Count < 200) resList.Add(line);
+        var res = string.Empty;
+        resList.ForEach(x => res += $"{x}\n");
+        CurrentPreviewModel.TextFile = res;
+        CurrentPreviewModel.AnimationConfig.LoadingAnimation = true;
     }
 
     private void PreviewConfig(string path)
@@ -118,7 +177,8 @@ public class PreviewViewModel : ObservableRecipient
     private void PreviewVideo(string path)
     {
         CurrentPreviewModel.VideoPath = path;
-        var res = WeakReferenceMessenger.Default.Send("play", "PausePlayToken");
+        var res = WeakReferenceMessenger.Default.Send(new PlayStatusModel(PlayStatusModel.Status.Play, true),
+            "PausePlayToken");
     }
 
     private void PreviewAudio(string path)
@@ -153,24 +213,25 @@ public class PreviewViewModel : ObservableRecipient
     private async Task PreviewPowerPoint(string path)
     {
         CurrentPreviewModel.AnimationConfig.LoadingAnimation = false;
+        CurrentPreviewModel.ImageItemList.Clear();
+        CurrentPreviewModel.CurrentImage = "";
         var pptReader = new PowerPointReader();
         var res = await pptReader.ReadPowerPointAsync(path);
-        CurrentPreviewModel.AnimationConfig.LoadingAnimation = true;
         if (res.IsSuccess == false)
             return;
-        Console.WriteLine(Path.GetFileNameWithoutExtension(path));
         var files = Directory.EnumerateFiles(res.Result)
             .OrderBy(x => Convert.ToInt32(Path.GetFileNameWithoutExtension(x)));
-        CurrentPreviewModel.ImageItemList.Clear();
         if (files.Count() == 0)
             return;
         for (var i = 0; i < files.Count(); i++)
             CurrentPreviewModel.ImageItemList.Add(new ListboxItemModel(i, files.ElementAt(i)));
         CurrentPreviewModel.SelectIndex = 0;
+        CurrentPreviewModel.AnimationConfig.LoadingAnimation = true;
     }
 
     private async Task PreviewWord(string path)
     {
+        CurrentPreviewModel.AnimationConfig.LoadingAnimation = false;
         var wordReader = new WordReader();
         var res = await wordReader.ReadWordAsync(path);
         if (!res.IsSuccess)
@@ -178,16 +239,19 @@ public class PreviewViewModel : ObservableRecipient
         CurrentPreviewModel.WordContentList.Clear();
         foreach (var each in res.Result)
             CurrentPreviewModel.WordContentList.Add(each);
+        CurrentPreviewModel.AnimationConfig.LoadingAnimation = true;
     }
 
     private async Task PreviewExcel(string path)
     {
+        CurrentPreviewModel.AnimationConfig.LoadingAnimation = false;
         var excelReader = new ExcelReader();
         var res = await excelReader.ReadExcel(path);
         CurrentPreviewModel.SheetContentMatrix.Clear();
         foreach (var each in res)
             CurrentPreviewModel.SheetContentMatrix.Add(each);
         OnPropertyChanged("CurrentPreviewModel");
+        CurrentPreviewModel.AnimationConfig.LoadingAnimation = true;
     }
 
     private void ChangeVisibility(PreviewUiElementModel.PreviewUiElement element)
@@ -202,6 +266,7 @@ public class PreviewViewModel : ObservableRecipient
                 CurrentPreviewModel.ElementVisibility.ExcelVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.WordVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.PptVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.UnknownVisibility = Visibility.Collapsed;
                 break;
             case PreviewUiElementModel.PreviewUiElement.Video:
                 CurrentPreviewModel.ElementVisibility.ImageVisibility = Visibility.Collapsed;
@@ -211,6 +276,7 @@ public class PreviewViewModel : ObservableRecipient
                 CurrentPreviewModel.ElementVisibility.WordVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.PptVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.TextVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.UnknownVisibility = Visibility.Collapsed;
                 break;
             case PreviewUiElementModel.PreviewUiElement.Config:
                 CurrentPreviewModel.ElementVisibility.ImageVisibility = Visibility.Collapsed;
@@ -220,6 +286,7 @@ public class PreviewViewModel : ObservableRecipient
                 CurrentPreviewModel.ElementVisibility.ExcelVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.WordVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.PptVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.UnknownVisibility = Visibility.Collapsed;
                 break;
             case PreviewUiElementModel.PreviewUiElement.Text:
                 CurrentPreviewModel.ElementVisibility.ImageVisibility = Visibility.Collapsed;
@@ -229,6 +296,7 @@ public class PreviewViewModel : ObservableRecipient
                 CurrentPreviewModel.ElementVisibility.ExcelVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.WordVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.PptVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.UnknownVisibility = Visibility.Collapsed;
                 break;
             case PreviewUiElementModel.PreviewUiElement.Excel:
                 CurrentPreviewModel.ElementVisibility.ImageVisibility = Visibility.Collapsed;
@@ -238,6 +306,7 @@ public class PreviewViewModel : ObservableRecipient
                 CurrentPreviewModel.ElementVisibility.ExcelVisibility = Visibility.Visible;
                 CurrentPreviewModel.ElementVisibility.WordVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.PptVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.UnknownVisibility = Visibility.Collapsed;
                 break;
             case PreviewUiElementModel.PreviewUiElement.Word:
                 CurrentPreviewModel.ElementVisibility.ImageVisibility = Visibility.Collapsed;
@@ -247,6 +316,7 @@ public class PreviewViewModel : ObservableRecipient
                 CurrentPreviewModel.ElementVisibility.ExcelVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.WordVisibility = Visibility.Visible;
                 CurrentPreviewModel.ElementVisibility.PptVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.UnknownVisibility = Visibility.Collapsed;
                 break;
             case PreviewUiElementModel.PreviewUiElement.Ppt:
                 CurrentPreviewModel.ElementVisibility.ImageVisibility = Visibility.Collapsed;
@@ -256,6 +326,17 @@ public class PreviewViewModel : ObservableRecipient
                 CurrentPreviewModel.ElementVisibility.ExcelVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.WordVisibility = Visibility.Collapsed;
                 CurrentPreviewModel.ElementVisibility.PptVisibility = Visibility.Visible;
+                CurrentPreviewModel.ElementVisibility.UnknownVisibility = Visibility.Collapsed;
+                break;
+            case PreviewUiElementModel.PreviewUiElement.Unknown:
+                CurrentPreviewModel.ElementVisibility.ImageVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.VideoVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.ConfigVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.TextVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.ExcelVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.WordVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.PptVisibility = Visibility.Collapsed;
+                CurrentPreviewModel.ElementVisibility.UnknownVisibility = Visibility.Visible;
                 break;
         }
     }

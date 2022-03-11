@@ -185,11 +185,11 @@
                           BorderBrush="Black"
                           hc:VisualElement.HighlightBorderBrush="{DynamicResource PrimaryBrush}"
                           Style="{StaticResource SearchBarExtend}" hc:BorderElement.CornerRadius="0"
-                          Text="{Binding Keyword,UpdateSourceTrigger=PropertyChanged}">
+                          Text="{Binding Keyword,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}">
                 <hc:SearchBar.InputBindings>
                     <KeyBinding Gesture="UP" Command="{Binding UpCommand}" />
                     <KeyBinding Gesture="DOWN" Command="{Binding DownCommand}" />
-                    <KeyBinding Gesture="ENTER" Command="{Binding PreviewCommand}" />
+                    <KeyBinding Gesture="ENTER" Command="{Binding PreviewCommand}" Modifiers="Control" />
                 </hc:SearchBar.InputBindings>
             </hc:SearchBar>
 
@@ -308,12 +308,14 @@
                                          Visibility="{Binding CurrentApp,Converter={StaticResource SvgVisibilityConverter}}" />
                     </Grid>
                     <!--文件信息-->
-                    <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="30 0 10 0">
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="10 0 10 0">
                         <TextBlock FontSize="18" FontWeight="Bold"
                                    Text="{Binding CurrentApp.Title,Converter={StaticResource NormalTitleConverter}}" />
                         <TextBlock FontSize="13" Margin="0 10 0 0" Text="{Binding CurrentApp.Size}"
                                    Foreground="#A3ABBD" />
                         <TextBlock FontSize="13" Margin="0 5 0 0" Text="{Binding CurrentApp.CreateTime}"
+                                   Foreground="#A3ABBD" />
+                        <TextBlock FontSize="13" Margin="0 5 0 0" Text="{Binding CurrentApp.Path}"
                                    Foreground="#A3ABBD" />
                     </StackPanel>
                 </Grid>
@@ -372,7 +374,7 @@
 
 
         <!--搜索结果-->
-        <ListView Grid.Row="3" ItemsSource="{Binding SearchResultList}" Grid.Column="1"
+        <ListView Grid.Row="3" ItemsSource="{Binding SearchResultList,Mode=OneWay}" Grid.Column="1"
                   ItemContainerStyle="{StaticResource ItemStyle}" SelectedIndex="{Binding SelectIndex}"
                   BorderThickness="0" Margin="30 10 30 0" Background="White" Name="ResultListView">
             <ListView.View>
