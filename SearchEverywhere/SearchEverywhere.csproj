@@ -76,15 +76,6 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.9\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus, Version=5.8.7.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.5.8.7\lib\net45\EPPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="FFmpeg.AutoGen, Version=4.4.1.1, Culture=neutral, PublicKeyToken=9b7632533a381715, processorArchitecture=MSIL">
-      <HintPath>..\packages\FFmpeg.AutoGen.4.4.1.1\lib\net472\FFmpeg.AutoGen.dll</HintPath>
-    </Reference>
-    <Reference Include="FlyleafLib, Version=3.4.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FlyleafLib.3.4.9\lib\net472\FlyleafLib.dll</HintPath>
-    </Reference>
     <Reference Include="HandyControl, Version=3.3.0.0, Culture=neutral, PublicKeyToken=45be8712787a1e5b, processorArchitecture=MSIL">
       <HintPath>..\packages\HandyControl.3.3.0\lib\net472\HandyControl.dll</HintPath>
     </Reference>
@@ -179,6 +170,9 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.CodeDom, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.CodeDom.6.0.0\lib\net461\System.CodeDom.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
@@ -241,6 +235,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -392,6 +387,7 @@
     <Compile Include="Model\KeyValueModel.cs" />
     <Compile Include="Model\ListboxItemModel.cs" />
     <Compile Include="Model\ListItemModel.cs" />
+    <Compile Include="Model\Message\RefreshProcessModel.cs" />
     <Compile Include="Model\MusicTagModel.cs" />
     <Compile Include="Model\PlayStatusModel.cs" />
     <Compile Include="Model\PreviewModel.cs" />
@@ -407,6 +403,7 @@
     <Compile Include="Utility\office\PowerPointReader.cs" />
     <Compile Include="Utility\office\WordReader.cs" />
     <Compile Include="Utility\PreviewUtility.cs" />
+    <Compile Include="Utility\ProcessUtility.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\PreviewViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

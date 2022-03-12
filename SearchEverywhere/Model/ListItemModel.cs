@@ -20,7 +20,7 @@ public class ListItemModel : ObservableObject
     private string title;
 
     public ListItemModel(BitmapImage icon, string title, IntPtr hwnd, DateTime createTime, string size, string path,
-        string extension, string svgIcon)
+        string extension, string svgIcon, int processId)
     {
         Icon = icon;
         Title = title;
@@ -30,7 +30,10 @@ public class ListItemModel : ObservableObject
         Path = path;
         Extension = extension;
         SvgIcon = svgIcon;
+        ProcessId = processId;
     }
+
+    public int ProcessId { get; set; }
 
     public string SvgIcon
     {

@@ -27,7 +27,7 @@
                             <TextBlock
                                 Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Text}"
                                 TextWrapping="WrapWithOverflow"
-                                FontSize="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=DataContext.FontSize}" />
+                                FontSize="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=DataContext.CurrentPreviewModel.FontSize}" />
                             <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content.Img}" />
                         </StackPanel>
                     </ControlTemplate>
@@ -102,7 +102,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid Background="#FBFAFF">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="{Binding CurrentPreviewModel.TitleHeight}" />
                 <RowDefinition />

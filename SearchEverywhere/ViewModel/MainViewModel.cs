@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -11,8 +10,11 @@ using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using SearchEverywhere.Model;
+using SearchEverywhere.Model.Message;
 using SearchEverywhere.Utility;
+using SearchEverywhere.View;
 
 namespace SearchEverywhere.ViewModel;
 
@@ -20,7 +22,9 @@ public class MainViewModel : ObservableRecipient
 {
     private const uint SW_RESTORE = 0x09;
     private static readonly Everything.Everything everything = new();
+    private readonly IView iview;
     private readonly PreviewUtility previewUtility = new();
+    private readonly ProcessUtility processUtility;
     private readonly Timer searchPendingTimer;
     private ListItemModel currentApp;
     private string keyword;
@@ -32,13 +36,15 @@ public class MainViewModel : ObservableRecipient
 
     private int selectIndex;
 
-    public MainViewModel()
+    public MainViewModel(IView iView)
     {
+        processUtility = new ProcessUtility();
+        processUtility.TrackNewProcess();
         searchPendingTimer = new Timer(CheckSearchKeyword, null, 200, 0);
-        GetTaskBarApps();
         everything.InitSearch();
         ChangeItemCommand = new RelayCommand<object>(x => { Console.WriteLine(x); });
-        InputCommand = new RelayCommand(() =>
+        NullCommand = new RelayCommand(() => { });
+        InputTabCommand = new RelayCommand(() =>
         {
             var index = SelectedItem.First(i => i.Value).Key;
             if (index == 3)
@@ -81,7 +87,22 @@ public class MainViewModel : ObservableRecipient
             if (CurrentApp != null)
                 previewUtility.TryToPreview(CurrentApp.Path);
         });
+        FullscreenCommand = new RelayCommand(() =>
+            {
+                WeakReferenceMessenger.Default.Send("false", "IsSmallWindowToken");
+                iView.ShowWindow();
+            }
+        );
+        WeakReferenceMessenger.Default.Register<MainViewModel, List<ListItemModel>, string>(this, "InitAppListToken",
+            InitAppListHandler);
+        WeakReferenceMessenger.Default.Register<MainViewModel, RefreshProcessModel, string>(this, "RefreshApplistToken",
+            RefreshAppListHandler);
     }
+
+    public ICommand NullCommand { get; }
+
+    public ICommand FullscreenCommand { get; }
+
 
     public int SelectIndex
     {
@@ -89,7 +110,6 @@ public class MainViewModel : ObservableRecipient
         set
         {
             SetProperty(ref selectIndex, value);
-            Console.WriteLine(searchResultList.Count);
             if (searchResultList.Count != 0 && value != -1)
                 CurrentApp = searchResultList[value];
             else
@@ -154,11 +174,20 @@ public class MainViewModel : ObservableRecipient
     }
 
     public ICommand ChangeItemCommand { get; }
-    public ICommand InputCommand { get; }
+    public ICommand InputTabCommand { get; }
     public ICommand EnterCommand { get; }
     public ICommand UpCommand { get; }
     public ICommand DownCommand { get; }
     public ICommand PreviewCommand { get; }
+
+    private void InitAppListHandler(MainViewModel recipient, List<ListItemModel> message)
+    {
+        message.ForEach(x =>
+        {
+            RunningAppsList.Add(x);
+            SearchResultList.Add(x);
+        });
+    }
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
@@ -187,10 +216,13 @@ public class MainViewModel : ObservableRecipient
         foreach (var each in raw)
             temp.Add(new ListItemModel(each.Icon,
                 Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd,
-                each.CreateTime, each.Size, each.Path, each.Extension, each.SvgIcon));
-        SearchResultList.Clear();
-        temp.ForEach(x => SearchResultList.Add(x));
-        SelectIndex = 0;
+                each.CreateTime, each.Size, each.Path, each.Extension, each.SvgIcon, each.ProcessId));
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            SearchResultList.Clear();
+            temp.ForEach(x => SearchResultList.Add(x));
+            SelectIndex = 0;
+        });
     }
 
     private async Task StartFileSearch(string keyword)
@@ -210,47 +242,24 @@ public class MainViewModel : ObservableRecipient
         });
     }
 
-    private async Task GetTaskBarApps()
+    private void RefreshAppListHandler(MainViewModel recipient, RefreshProcessModel message)
     {
-        var tempList = new List<ListItemModel>();
-        var processes = Process.GetProcesses();
-        foreach (var item in processes)
-            if (item.MainWindowTitle.Length > 0)
+        if (message.IsAdd)
+        {
+            RunningAppsList.Add(message.ProcessInfo);
+            StartProcessSearch(Keyword);
+        }
+        else
+        {
+            if (RunningAppsList.Any(x => x.ProcessId == message.ProcessInfo.ProcessId))
             {
-                if (item.MainModule == null) continue;
-                var icon = IconUtility.GetIcon(item.MainModule.FileName);
-                var tempItem = new ListItemModel(icon, item.MainWindowTitle, item.MainWindowHandle,
-                    item.StartTime, await GetRamUsage(item), null, null, null);
-                tempList.Add(tempItem);
+                var temp = RunningAppsList.First(x => x.ProcessId == message.ProcessInfo.ProcessId);
+                RunningAppsList.Remove(temp);
+                StartProcessSearch(Keyword);
             }
-
-        tempList.ForEach(x =>
-        {
-            RunningAppsList.Add(x);
-            SearchResultList.Add(x);
-        });
-        SelectIndex = 0;
+        }
     }
 
-
-    private async Task<string> GetRamUsage(Process process)
-    {
-        var memsize = 0; // memsize in KB
-        var PC = new PerformanceCounter();
-        var memoryString = string.Empty;
-        await Task.Run(() =>
-        {
-            PC.CategoryName = "Process";
-            PC.CounterName = "Working Set - Private";
-            PC.InstanceName = process.ProcessName;
-            memsize = Convert.ToInt32(PC.NextValue());
-            memoryString = FileUtility.ConvertSize(memsize);
-            PC.Close();
-            PC.Dispose();
-        });
-
-        return memoryString;
-    }
 
     private void RegisterHotkey()
     {

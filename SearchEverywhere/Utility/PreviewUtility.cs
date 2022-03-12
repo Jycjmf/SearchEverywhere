@@ -11,6 +11,7 @@ public class PreviewUtility
     {
         if (path == null)
             return;
+        WeakReferenceMessenger.Default.Send("true", "IsSmallWindowToken");
         var extension = Path.GetExtension(path);
         if (Regex.Matches(extension, @"png|jpeg|jpg|gif|ico|bmp", RegexOptions.IgnoreCase).Count > 0)
         {

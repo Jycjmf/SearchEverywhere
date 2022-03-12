@@ -103,12 +103,7 @@
         </Style>
     </Window.Resources>
 
-    <Window.InputBindings>
-        <KeyBinding Gesture="TAB" Command="{Binding InputCommand}" />
-        <KeyBinding Gesture="ENTER" Command="{Binding EnterCommand}" />
-        <KeyBinding Gesture="UP" Command="{Binding UpCommand}" />
-        <KeyBinding Gesture="DOWN" Command="{Binding DownCommand}" />
-    </Window.InputBindings>
+
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="50"
@@ -186,11 +181,6 @@
                           hc:VisualElement.HighlightBorderBrush="{DynamicResource PrimaryBrush}"
                           Style="{StaticResource SearchBarExtend}" hc:BorderElement.CornerRadius="0"
                           Text="{Binding Keyword,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}">
-                <hc:SearchBar.InputBindings>
-                    <KeyBinding Gesture="UP" Command="{Binding UpCommand}" />
-                    <KeyBinding Gesture="DOWN" Command="{Binding DownCommand}" />
-                    <KeyBinding Gesture="ENTER" Command="{Binding PreviewCommand}" Modifiers="Control" />
-                </hc:SearchBar.InputBindings>
             </hc:SearchBar>
 
         </Grid>
@@ -377,6 +367,10 @@
         <ListView Grid.Row="3" ItemsSource="{Binding SearchResultList,Mode=OneWay}" Grid.Column="1"
                   ItemContainerStyle="{StaticResource ItemStyle}" SelectedIndex="{Binding SelectIndex}"
                   BorderThickness="0" Margin="30 10 30 0" Background="White" Name="ResultListView">
+            <ListView.InputBindings>
+                <KeyBinding Key="Up" Command="{Binding NullCommand}"></KeyBinding>
+                <KeyBinding Key="Down" Command="{Binding NullCommand}"></KeyBinding>
+            </ListView.InputBindings>
             <ListView.View>
                 <GridView ColumnHeaderContainerStyle="{StaticResource HeaderStyle}">
                     <GridViewColumn />

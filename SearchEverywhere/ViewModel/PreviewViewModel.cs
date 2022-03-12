@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using FlyleafLib.Controls.WPF;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using SearchEverywhere.Model;
 using SearchEverywhere.Utility.office;
@@ -25,7 +25,7 @@ public class PreviewViewModel : ObservableRecipient
 
     public PreviewViewModel()
     {
-        PauseCommand = new RelayCommand(str =>
+        PauseCommand = new RelayCommand<string>(str =>
             WeakReferenceMessenger.Default.Send(new PlayStatusModel(PlayStatusModel.Status.Play, false),
                 "PausePlayToken"));
         WeakReferenceMessenger.Default.Register<PreviewViewModel, CurrentTimeModel, string>(this,
@@ -39,16 +39,16 @@ public class PreviewViewModel : ObservableRecipient
                     CurrentPreviewModel.SliderInfo.MaxValue = msg.TotalTime.TotalSeconds;
                 }
             });
-        JumpTimeCommand = new RelayCommand(r =>
+        JumpTimeCommand = new RelayCommand<string>(r =>
         {
-            Console.WriteLine(r);
             isManualChangeSlider = true;
             WeakReferenceMessenger.Default.Send(
                 new VideoSliderModel(Convert.ToDouble(r),
                     CurrentPreviewModel.CurrentVideoInfo.TotalTime.TotalSeconds), "JumpToTimeCommand");
             isManualChangeSlider = false;
         });
-        MuteCommand = new RelayCommand(e => WeakReferenceMessenger.Default.Send("mute", "MuteToken"));
+        MuteCommand = new RelayCommand(() => WeakReferenceMessenger.Default.Send("mute", "MuteToken"));
+        CloseWindowCommand = new RelayCommand(() => { WeakReferenceMessenger.Default.Send("", "CloseWindowToken"); });
         WeakReferenceMessenger.Default.Register<PreviewViewModel, PreviewUiElementModel, string>(this, "StartPreview",
             (r, msg) =>
             {
@@ -95,16 +95,18 @@ public class PreviewViewModel : ObservableRecipient
                         break;
                 }
             });
-        WeakReferenceMessenger.Default.Register<PreviewViewModel, string, string>(this, "ConvertFullDisplayMode",
+        WeakReferenceMessenger.Default.Register<PreviewViewModel, string, string>(this, "IsSmallWindowToken",
             (r, msg) =>
             {
                 if (msg == "true")
-                    CurrentPreviewModel.TitleHeight = 40;
+                    SwitchLayout(true);
                 else
-                    CurrentPreviewModel.TitleHeight = 0;
+                    SwitchLayout(false);
             });
         ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Unknown);
     }
+
+    public ICommand CloseWindowCommand { get; }
 
     public PreviewModel CurrentPreviewModel
     {
@@ -131,6 +133,7 @@ public class PreviewViewModel : ObservableRecipient
             CurrentPreviewModel.SubTitleFontSize = 15;
             CurrentPreviewModel.AlbumMargin = 35;
             CurrentPreviewModel.SliderMargin = 10;
+            CurrentPreviewModel.TitleHeight = 0;
         }
         else
         {
@@ -138,6 +141,7 @@ public class PreviewViewModel : ObservableRecipient
             CurrentPreviewModel.SubTitleFontSize = 20;
             CurrentPreviewModel.AlbumMargin = 100;
             CurrentPreviewModel.SliderMargin = 100;
+            CurrentPreviewModel.TitleHeight = 40;
         }
     }
 

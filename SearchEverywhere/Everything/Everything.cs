@@ -93,7 +93,7 @@ public class Everything
                 var extension = Path.GetExtension(path);
                 var svgIcon = ConvertIcon(extension);
                 resList.Result.Add(new ListItemModel(null, title, IntPtr.Zero, modifyTime, sizeString, path, extension,
-                    svgIcon));
+                    svgIcon, 0));
             }
         });
 

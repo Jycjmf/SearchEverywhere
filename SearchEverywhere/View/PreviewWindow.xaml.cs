@@ -1,27 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
-namespace SearchEverywhere.View
+namespace SearchEverywhere.View;
+
+/// <summary>
+///     Interaction logic for PreviewWindow.xaml
+/// </summary>
+public partial class PreviewWindow : Window, IView
 {
-    /// <summary>
-    /// Interaction logic for PreviewWindow.xaml
-    /// </summary>
-    public partial class PreviewWindow : Window
+    public PreviewWindow()
     {
-        public PreviewWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        WeakReferenceMessenger.Default.Register<PreviewWindow, string, string>(this, "CloseWindowToken",
+            (r, msg) => { Hide(); });
+        AddHandler(KeyUpEvent, new KeyEventHandler(ShortcutHandler), true);
     }
+
+    public void ShowWindow()
+    {
+        ShowDialog();
+    }
+
+    private void ShortcutHandler(object sender, KeyEventArgs e)
+    {
+        if (e == null) return;
+        if (e.Key == Key.Escape)
+            Hide();
+    }
+}
+
+public interface IView
+{
+    void ShowWindow();
 }

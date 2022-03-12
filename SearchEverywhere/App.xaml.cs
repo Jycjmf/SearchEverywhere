@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using SearchEverywhere.View;
 using SearchEverywhere.ViewModel;
 
 namespace SearchEverywhere;
@@ -14,6 +15,7 @@ public partial class App : Application
     {
         Ioc.Default.ConfigureServices(
             new ServiceCollection()
+                .AddScoped<IView, PreviewWindow>()
                 .AddSingleton<MainViewModel>()
                 .AddSingleton<PreviewViewModel>()
                 .BuildServiceProvider());
