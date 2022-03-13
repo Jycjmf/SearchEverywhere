@@ -5,20 +5,29 @@ namespace SearchEverywhere.Model;
 
 public class VisibilityModel : ObservableObject
 {
+    private Visibility albumCoverVisibility = Visibility.Collapsed;
     private Visibility configVisibility = Visibility.Collapsed;
 
     private Visibility excelVisibility = Visibility.Collapsed;
     private Visibility imageVisibility = Visibility.Collapsed;
 
     private Visibility pptVisibility = Visibility.Collapsed;
-    private Visibility sliderVisibility = Visibility.Collapsed;
-
     private Visibility textVisibility = Visibility.Collapsed;
     private Visibility unknownVisibility = Visibility.Visible;
 
     private Visibility videoVisibility = Visibility.Collapsed;
 
     private Visibility wordVisibility = Visibility.Collapsed;
+
+    public Visibility AlbumCoverVisibility
+    {
+        get => albumCoverVisibility;
+        set
+        {
+            SetProperty(ref albumCoverVisibility, value);
+            OnPropertyChanged();
+        }
+    }
 
     public Visibility UnknownVisibility
     {
@@ -30,15 +39,6 @@ public class VisibilityModel : ObservableObject
         }
     }
 
-    public Visibility SliderVisibility
-    {
-        get => sliderVisibility;
-        set
-        {
-            SetProperty(ref sliderVisibility, value);
-            OnPropertyChanged();
-        }
-    }
 
     public Visibility ImageVisibility
     {

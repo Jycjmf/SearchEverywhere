@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SearchEverywhere.View"
         mc:Ignorable="d"
         Title="PreviewWindow" Height="450" Width="800"
         DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
@@ -14,9 +13,7 @@
             ResizeBorderThickness="4"
             GlassFrameThickness="5" />
     </WindowChrome.WindowChrome>
-    <Grid>
-        <local:PreviewView Width="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=Width}"
-                           Height="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=Height}" />
+    <Grid Name="RootGird">
         <!--导航栏-->
         <Grid Background="White" WindowChrome.IsHitTestVisibleInChrome="False" VerticalAlignment="Top" Height="40">
             <StackPanel Margin="0 0 15 0" HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -28,6 +25,7 @@
                 <!--Zoom-->
                 <Border Height="2" Background="Black" Width="10" />
                 <Slider VerticalAlignment="Center" Width="150" Value="{Binding   CurrentPreviewModel.FontSize}"
+                        FocusVisualStyle="{x:Null}"
                         Maximum="100" Minimum="1"
                         TabIndex="-1" />
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" FontWeight="Bold">+</TextBlock>
@@ -52,7 +50,7 @@
                 <Button Name="CloseBtn" FontWeight="Bold"
                         Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
                         WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}"
-                        Content="&#xe60a;" FontSize="18" Command="{Binding CloseWindowCommand}"/>
+                        Content="&#xe60a;" FontSize="18" Command="{Binding CloseWindowCommand}" />
             </StackPanel>
         </Grid>
 

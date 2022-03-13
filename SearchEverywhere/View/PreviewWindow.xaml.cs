@@ -4,16 +4,21 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace SearchEverywhere.View;
 
-/// <summary>
-///     Interaction logic for PreviewWindow.xaml
-/// </summary>
 public partial class PreviewWindow : Window, IView
 {
     public PreviewWindow()
     {
         InitializeComponent();
         WeakReferenceMessenger.Default.Register<PreviewWindow, string, string>(this, "CloseWindowToken",
-            (r, msg) => { Hide(); });
+            (r, msg) => CloseWindowUtility());
+        WeakReferenceMessenger.Default.Register<PreviewWindow, string, string>(this, "AddSingletonWindowPreview",
+            (r, msg) =>
+            {
+                PreviewView.instance ??= new PreviewView();
+                if (PreviewView.instance != null && !r.RootGird.Children.Contains(PreviewView.instance))
+                    r.RootGird.Children.Add(PreviewView.instance);
+                WeakReferenceMessenger.Default.Send("", "RefreshWidthHeightToken");
+            });
         AddHandler(KeyUpEvent, new KeyEventHandler(ShortcutHandler), true);
     }
 
@@ -26,7 +31,22 @@ public partial class PreviewWindow : Window, IView
     {
         if (e == null) return;
         if (e.Key == Key.Escape)
-            Hide();
+            CloseWindowUtility();
+    }
+
+    private void CloseWindowUtility()
+    {
+        Hide();
+        WeakReferenceMessenger.Default.Send("true", "IsSmallWindowToken");
+        if (PreviewView.instance != null)
+            RootGird.Children.Remove(PreviewView.instance);
+        WeakReferenceMessenger.Default.Send("true", "AddMainWindowPreview");
+    }
+
+    private void RootGird_Loaded(object sender, RoutedEventArgs e)
+    {
+        //PreviewView.instance ??= new PreviewView();
+        //RootGird.Children.Add(PreviewView.instance);
     }
 }
 

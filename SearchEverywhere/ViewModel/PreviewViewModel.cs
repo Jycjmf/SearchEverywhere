@@ -26,7 +26,8 @@ public class PreviewViewModel : ObservableRecipient
     public PreviewViewModel()
     {
         PauseCommand = new RelayCommand<string>(str =>
-            WeakReferenceMessenger.Default.Send(new PlayStatusModel(PlayStatusModel.Status.Play, false),
+            WeakReferenceMessenger.Default.Send(
+                new PlayStatusModel(PlayStatusModel.Status.Play, false, CurrentPreviewModel.VideoPath),
                 "PausePlayToken"));
         WeakReferenceMessenger.Default.Register<PreviewViewModel, CurrentTimeModel, string>(this,
             "ChangeVideoTimeToken", (r, msg) =>
@@ -39,13 +40,19 @@ public class PreviewViewModel : ObservableRecipient
                     CurrentPreviewModel.SliderInfo.MaxValue = msg.TotalTime.TotalSeconds;
                 }
             });
-        JumpTimeCommand = new RelayCommand<string>(r =>
+        JumpTimeCommand = new RelayCommand<object>(r =>
         {
-            isManualChangeSlider = true;
-            WeakReferenceMessenger.Default.Send(
-                new VideoSliderModel(Convert.ToDouble(r),
-                    CurrentPreviewModel.CurrentVideoInfo.TotalTime.TotalSeconds), "JumpToTimeCommand");
-            isManualChangeSlider = false;
+            try
+            {
+                isManualChangeSlider = true;
+                WeakReferenceMessenger.Default.Send(
+                    new VideoSliderModel(Convert.ToDouble(r),
+                        CurrentPreviewModel.CurrentVideoInfo.TotalTime.TotalSeconds), "JumpToTimeCommand");
+                isManualChangeSlider = false;
+            }
+            catch (Exception e)
+            {
+            }
         });
         MuteCommand = new RelayCommand(() => WeakReferenceMessenger.Default.Send("mute", "MuteToken"));
         CloseWindowCommand = new RelayCommand(() => { WeakReferenceMessenger.Default.Send("", "CloseWindowToken"); });
@@ -63,6 +70,7 @@ public class PreviewViewModel : ObservableRecipient
                         PreviewVideo(msg.Path);
                         break;
                     case PreviewUiElementModel.PreviewUiElement.Audio:
+                        CurrentPreviewModel.VideoPath = msg.Path;
                         SwitchLayout(msg.IsSmallWindow);
                         ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Video);
                         PreviewAudio(msg.Path);
@@ -181,24 +189,45 @@ public class PreviewViewModel : ObservableRecipient
     private void PreviewVideo(string path)
     {
         CurrentPreviewModel.VideoPath = path;
-        var res = WeakReferenceMessenger.Default.Send(new PlayStatusModel(PlayStatusModel.Status.Play, true),
+        currentPreviewModel.ElementVisibility.AlbumCoverVisibility = Visibility.Collapsed;
+        var res = WeakReferenceMessenger.Default.Send(new PlayStatusModel(PlayStatusModel.Status.Play, true, path),
             "PausePlayToken");
     }
 
     private void PreviewAudio(string path)
     {
+        currentPreviewModel.ElementVisibility.AlbumCoverVisibility = Visibility.Visible;
         CurrentPreviewModel.VideoPath = path;
-        var tagFile = TagLib.File.Create(path);
-        var res = tagFile.Tag.Pictures;
-        if (res.Length > 0)
-            CurrentPreviewModel.MusicTag.AlbumCover = ConvertIPictureToBitmapImage(res.First());
-        else
+        WeakReferenceMessenger.Default.Send(new PlayStatusModel(PlayStatusModel.Status.Play, true, path),
+            "PausePlayToken");
+        try
+        {
+            var tagFile = TagLib.File.Create(path);
+            var res = tagFile.Tag.Pictures;
+            if (res.Length > 0)
+                CurrentPreviewModel.MusicTag.AlbumCover = ConvertIPictureToBitmapImage(res.First());
+            else
+                CurrentPreviewModel.MusicTag.AlbumCover =
+                    new BitmapImage(new Uri(@"..\img\cover.png", UriKind.Relative));
+            CurrentPreviewModel.MusicTag.Title = tagFile.Tag.Title;
+            if (string.IsNullOrWhiteSpace(tagFile.Tag.Title))
+                CurrentPreviewModel.MusicTag.Title = Path.GetFileName(path);
+            if (tagFile.Tag.Artists.Length > 0)
+                foreach (var each in tagFile.Tag.Artists)
+                    CurrentPreviewModel.MusicTag.Artist = $"{each} ";
+            else
+                CurrentPreviewModel.MusicTag.Artist = "未知艺术家";
+            CurrentPreviewModel.MusicTag.Album = tagFile.Tag.Album;
+            if (string.IsNullOrWhiteSpace(tagFile.Tag.Album))
+                CurrentPreviewModel.MusicTag.Album = "未知专辑";
+        }
+        catch (Exception e)
+        {
             CurrentPreviewModel.MusicTag.AlbumCover = new BitmapImage(new Uri(@"..\img\cover.png", UriKind.Relative));
-        CurrentPreviewModel.MusicTag.Title = tagFile.Tag.Title;
-        if (tagFile.Tag.Artists.Length > 0)
-            foreach (var each in tagFile.Tag.Artists)
-                CurrentPreviewModel.MusicTag.Artist = $"{each} ";
-        CurrentPreviewModel.MusicTag.Album = tagFile.Tag.Album;
+            CurrentPreviewModel.MusicTag.Title = Path.GetFileName(path);
+            CurrentPreviewModel.MusicTag.Artist = "未知艺术家";
+            CurrentPreviewModel.MusicTag.Album = "未知专辑";
+        }
     }
 
     private BitmapImage ConvertIPictureToBitmapImage(IPicture pic)

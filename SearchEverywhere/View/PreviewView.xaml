@@ -10,7 +10,7 @@
              xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-             Width="800" Height="450"
+             Height="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Grid},Path=ActualHeight}"
              DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
     <UserControl.Resources>
         <converter:ReverseBooleanConverter x:Key="ReverseBooleanConverter" />
@@ -113,8 +113,6 @@
             <!--图片浏览器-->
             <hc:ImageViewer Grid.Row="1" Background="{DynamicResource SecondaryRegionBrush}" ShowImgMap="True"
                             ImageSource="{Binding CurrentPreviewModel.ImagePath}"
-                            Width="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=UserControl},Path=ActualWidth}"
-                            Height="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=UserControl},Path=ActualHeight}"
                             Visibility="{Binding   CurrentPreviewModel.ElementVisibility.ImageVisibility}" />
             <!--config浏览器-->
             <DataGrid Grid.Row="1" ItemsSource="{Binding   CurrentPreviewModel.ConfigList}" SelectionMode="Single"
@@ -167,13 +165,17 @@
                               Name="VideoPlayer"
                               LoadedBehavior="Manual"
                               Grid.ColumnSpan="2" />
+                <!--专辑封面-->
                 <Image Source="{Binding   CurrentPreviewModel.MusicTag.AlbumCover}"
-                       RenderOptions.BitmapScalingMode="HighQuality" Margin="{Binding CurrentPreviewModel.AlbumMargin}">
+                       RenderOptions.BitmapScalingMode="HighQuality" Margin="{Binding CurrentPreviewModel.AlbumMargin}"
+                       Visibility="{Binding CurrentPreviewModel.ElementVisibility.AlbumCoverVisibility}">
                     <Image.Effect>
                         <DropShadowEffect BlurRadius="10" Direction="-45" Opacity="0.3" ShadowDepth="10" />
                     </Image.Effect>
                 </Image>
-                <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
+                <!--专辑信息-->
+                <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center"
+                            Visibility="{Binding CurrentPreviewModel.ElementVisibility.AlbumCoverVisibility}">
                     <TextBlock Text="{Binding   CurrentPreviewModel.MusicTag.Title}" FontWeight="Bold"
                                FontSize="{Binding CurrentPreviewModel.TitleFontSize}"
                                VerticalAlignment="Center" />
@@ -323,6 +325,7 @@
                           xf:Animations.SecondaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,
                     Converter={StaticResource ReverseBooleanConverter}}" />
             </Grid>
+
             <Grid Grid.Row="1" Visibility="{Binding CurrentPreviewModel.ElementVisibility.UnknownVisibility}">
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                     <svgc:SvgViewbox Source="/img/icons/unknown.svg" Width="100" Height="100"

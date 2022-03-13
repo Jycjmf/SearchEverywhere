@@ -19,6 +19,8 @@ public class StringToXamlConverter : IValueConverter
         if (input != null)
         {
             var str = input.Title;
+            if (str == null)
+                return null;
             var textBlock = new TextBlock();
             textBlock.TextWrapping = TextWrapping.Wrap;
             var escapedXml = SecurityElement.Escape(str);

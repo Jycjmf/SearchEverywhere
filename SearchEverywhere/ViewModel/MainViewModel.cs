@@ -32,7 +32,7 @@ public class MainViewModel : ObservableRecipient
 
     private ObservableCollection<ListItemModel> searchResultList = new();
 
-    private Dictionary<int, bool> selectedItem = new() {{0, true}, {1, false}, {2, false}, {3, false}};
+    private Dictionary<int, bool> selectedItem = new() {{0, false}, {1, true}, {2, false}, {3, false}};
 
     private int selectIndex;
 
@@ -208,7 +208,7 @@ public class MainViewModel : ObservableRecipient
 
     private void StartProcessSearch(string keyword)
     {
-        keyword = keyword.Replace(@"\", @"\\");
+        keyword = keyword.Replace(@"\", @"\\").Replace(".", "\\.");
         var raw = runningAppsList
             .Where(x => Regex.Matches(x.Title, keyword, RegexOptions.IgnoreCase).Count > 0)
             .ToList();
@@ -240,6 +240,7 @@ public class MainViewModel : ObservableRecipient
             SearchResultList.Clear();
             tempList.ForEach(x => { SearchResultList.Add(x); });
         });
+        CurrentApp = searchResultList.First();
     }
 
     private void RefreshAppListHandler(MainViewModel recipient, RefreshProcessModel message)
