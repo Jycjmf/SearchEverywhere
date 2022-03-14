@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-SPRK_default_preset_name_custom_1">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="SPRK_default_preset_name_custom_1" data-name="SPRK_default_preset_name_custom – 1" clip-path="url(#clip-SPRK_default_preset_name_custom_1)">
+    <path id="about" d="M225.389,0C100.974,0,0,100.974,0,225.389S100.974,450.777,225.389,450.777,450.777,349.8,450.777,225.389,349.8,0,225.389,0Zm27.5,340.788A22.124,22.124,0,0,1,230.8,362.876H219.754a22.124,22.124,0,0,1-22.088-22.088V208.935a22.124,22.124,0,0,1,22.088-22.088H230.8a22.124,22.124,0,0,1,22.088,22.088Zm-27.5-186.847a27.5,27.5,0,1,1,27.5-27.5A27.607,27.607,0,0,1,225.389,153.94Z" transform="translate(24.611 24.611)" fill="#51459e"/>
+    <circle id="Ellipse_1" data-name="Ellipse 1" cx="30" cy="30" r="30" transform="translate(220 122)" fill="#fc9d10"/>
+    <path id="Path_1" data-name="Path 1" d="M222.938,230.107s.851-19.78,28.088-19.359,28.088,21.884,28.088,21.884V366.585s.063,11.629-10.074,17.443-27.776,3.609-27.776,3.609-14.192.6-18.752-19.49c-1.678-7.394-.184-27.788,0-51.084C222.826,277.47,222.938,230.107,222.938,230.107Z" transform="translate(-0.778)" fill="#fc9d10"/>
+  </g>
+</svg>

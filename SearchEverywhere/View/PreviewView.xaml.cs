@@ -47,7 +47,7 @@ public partial class PreviewView
                             catch (Exception e)
                             {
                                 Console.WriteLine(e);
-                                MessageBox.Show(e.ToString());
+                                MessageBox.Show(e.ToString(), "Exception Catch");
                             }
                         }
                         else

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="524" height="644" viewBox="0 0 524 644">
+  <defs>
+    <style>
+      .cls-1 {
+        clip-path: url(#clip-SPRK_default_preset_name_custom_1);
+      }
+
+      .cls-2 {
+        fill: #f60;
+      }
+
+      .cls-3 {
+        fill: #d6d6d6;
+      }
+    </style>
+    <clipPath id="clip-SPRK_default_preset_name_custom_1">
+      <rect width="524" height="644"/>
+    </clipPath>
+  </defs>
+  <g id="SPRK_default_preset_name_custom_1" data-name="SPRK_default_preset_name_custom – 1" class="cls-1">
+    <rect class="cls-3" width="524" height="644"/>
+    <g id="Everything" transform="translate(52.367 36.288)">
+      <path id="Path_1" data-name="Path 1" class="cls-2" d="M303.239,388.144c39.147,1.6,80.091-14.181,109.851-43.94a154.3,154.3,0,0,0,1.4-218.3l-1.4-1.4c-59.719-60.518-157.586-61.117-218.3-1.4l-1.4,1.4a154.3,154.3,0,0,0-1.4,218.3l1.4,1.4c29.959,29.959,70.7,45.538,109.85,43.94Zm0-263.641c28.162,0,56.523,9.387,78.493,31.357,43.94,43.94,43.94,113.046,0,156.986s-113.046,43.94-156.986,0-43.94-113.046,0-156.986c22.17-21.97,50.331-31.357,78.493-31.357Z" transform="translate(-50.583 0)"/>
+      <path id="Path_2" data-name="Path 2" class="cls-2" d="M79.2,800.8l34.173,33.633,146.6-146.6-44.693-23.867L79.2,800.8Z" transform="translate(-70.033 -341.708)"/>
+    </g>
+  </g>
+</svg>

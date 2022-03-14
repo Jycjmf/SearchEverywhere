@@ -4,14 +4,156 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:xf="clr-namespace:XamlFlair;assembly=XamlFlair.WPF"
+             xmlns:converter="clr-namespace:SearchEverywhere.Converter.PreviewConverter"
              mc:Ignorable="d"
+             xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
+             DataContext="{Binding Source={StaticResource ViewModelLocator},Path=wizardViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <hc:StepBar Grid.ColumnSpan="2" StepIndex="1">
-            <hc:StepBarItem Content="" />
-            <hc:StepBarItem Content="" />
-            <hc:StepBarItem Content="" />
-            <hc:StepBarItem Content="" />
+    <UserControl.Resources>
+        <Style x:Key="DataGridTextCenterColumnStyle" TargetType="DataGridCell"
+               BasedOn="{StaticResource DataGridCellStyle}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="HeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <converter:ReverseBooleanConverter x:Key="ReverseBooleanConverter" />
+    </UserControl.Resources>
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button Style="{StaticResource ButtonIcon}" hc:IconElement.Geometry="{StaticResource LeftGeometry}"
+                HorizontalAlignment="Left" Margin="20 0" Command="{Binding GoBackCommand}" />
+        <hc:StepBar Margin="0 10 0 0" VerticalAlignment="Center" StepIndex="{Binding CurrentPage}" FontSize="18"
+                    Cursor="Hand">
+            <hc:StepBarItem Name="ItemWelcome" Content="欢迎👋🏻" />
+            <hc:StepBarItem Name="ItemEngine" Content="引擎检测" />
+            <hc:StepBarItem Name="ItemShortcut" Content="快捷键" />
+            <hc:StepBarItem Name="ItemFinish" Content="完成🎉" />
         </hc:StepBar>
+        <Grid Name="WelcomeGrid" Grid.Row="1" Visibility="{Binding CurrentWizardModel.WelcomePageVisibility}">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock HorizontalAlignment="Center" FontSize="40">欢迎使用</TextBlock>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock FontSize="50" VerticalAlignment="Center" FontWeight="Bold">SearchEverywhere</TextBlock>
+                    <Image Source="/img/logo.png" Width="60" RenderOptions.BitmapScalingMode="HighQuality" />
+                </StackPanel>
+                <TextBlock FontSize="20" Margin="0 10 0 0">快速多任务切换 | 毫秒级文件搜索 | 常用格式预览 | 遵循MVVM模式</TextBlock>
+                <Button Style="{StaticResource ButtonInfo}" Background="{StaticResource SecondaryBorderBrush}"
+                        hc:BorderElement.CornerRadius="10" Width="200" Height="50" FontSize="30" Margin="0 50 0 0"
+                        Command="{Binding GoToEngineCommand}"
+                        Cursor="Hand">
+                    开始
+                </Button>
+            </StackPanel>
+            <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#666F79"
+                       FontSize="15" Margin="0 0 0 20">
+                遵循GPL V3协议的开源程序
+            </TextBlock>
+        </Grid>
+        <!--依赖检测-->
+        <Grid Name="EngineGrid" Grid.Row="1" Visibility="{Binding CurrentWizardModel.EnginePageVisibility}">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock HorizontalAlignment="Center" FontSize="30">为了保证程序正常运行，我们需要如下依赖</TextBlock>
+                <UniformGrid Rows="1" Columns="3" Margin="0 30">
+                    <StackPanel Orientation="Vertical">
+                        <svg:SvgViewbox Source="/img/icons/Everything.svg" Width="100"
+                                        Effect="{StaticResource EffectShadow2}" />
+                        <TextBlock HorizontalAlignment="Center" FontSize="20" Foreground="#666F79" Margin="0 10 0 0">Everything</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <svg:SvgViewbox Source="/img/icons/LAV.svg" Width="100" Effect="{StaticResource EffectShadow2}" />
+                        <TextBlock HorizontalAlignment="Center" FontSize="20" Foreground="#666F79" Margin="0 15 0 0">LAVFilters</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <svg:SvgViewbox Source="/img/icons/powerpoint.svg" Width="100"
+                                        Effect="{StaticResource EffectShadow2}" />
+                        <TextBlock HorizontalAlignment="Center" FontSize="20" Foreground="#666F79" Margin="0 10 0 0">Powerpoint</TextBlock>
+                    </StackPanel>
+                </UniformGrid>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <hc:LoadingLine Margin="0,20" Foreground="{StaticResource AccentBrush}"
+                                    Style="{StaticResource LoadingLineLarge}"
+                                    xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn}}"
+                                    xf:Animations.PrimaryBinding="{Binding CurrentWizardModel.LoadingAnimation}"
+                                    Visibility="{Binding CurrentWizardModel.LoadingAnimationVisibility}" />
+                    <Button Style="{StaticResource ButtonSuccess}" Background="{StaticResource SecondaryBorderBrush}"
+                            hc:BorderElement.CornerRadius="10" Width="180" Height="40" FontSize="20" Margin="0 10 0 20"
+                            Cursor="Hand"
+                            xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                            xf:Animations.PrimaryBinding="{Binding CurrentWizardModel.EnvironmentReady,Converter={StaticResource ReverseBooleanConverter}}"
+                            xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                            xf:Animations.SecondaryBinding="{Binding CurrentWizardModel.EnvironmentReady}"
+                            Visibility="{Binding CurrentWizardModel.NextButtonVisibility}" Command="{Binding GoToShortcutCommand}">
+                        下一步
+                    </Button>
+                    <Button Style="{StaticResource ButtonDanger}"
+                            hc:BorderElement.CornerRadius="10" Width="180" Height="40" FontSize="20" Margin="0 10 0 20"
+                            Cursor="Hand"
+                            xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeOut},Event=None}"
+                            xf:Animations.PrimaryBinding="{Binding CurrentWizardModel.EnvironmentError,Converter={StaticResource ReverseBooleanConverter}}"
+                            xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
+                            xf:Animations.SecondaryBinding="{Binding CurrentWizardModel.EnvironmentError}"
+                            Visibility="{Binding CurrentWizardModel.ExitButtonVisibility}" Command="hc:ControlCommands.CloseWindow">
+                        退出
+                    </Button>
+                    <TextBlock HorizontalAlignment="Center" FontSize="20"
+                               Foreground="{Binding CurrentWizardModel.FontColor}"
+                               Text="{Binding CurrentWizardModel.Tips}" />
+
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <!--键盘设置-->
+        <Grid Name="ShortcutGrid" Grid.Row="1" Visibility="{Binding CurrentWizardModel.ShortcutPageVisibility}">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock HorizontalAlignment="Center" FontSize="30" Margin="0 10 0 0">常用快捷键</TextBlock>
+                <TextBlock FontSize="18" Margin="0 10" HorizontalAlignment="Center" Foreground="#666F79">请通过记住本程序的快捷键来提高使用效率吧</TextBlock>
+                <DataGrid ItemsSource="{Binding CurrentWizardModel.ShortcutList}" AutoGenerateColumns="False"
+                          Width="800"
+                          Height="350" FontSize="18" ColumnHeaderStyle="{StaticResource HeaderStyle}"
+                          IsHitTestVisible="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True" Header="功能" Binding="{Binding Tips}" Width="*"
+                                            CellStyle="{StaticResource DataGridTextCenterColumnStyle}" />
+                        <DataGridTextColumn IsReadOnly="True" Header="快捷键" Binding="{Binding Shortcut}" Width="*"
+                                            CellStyle="{StaticResource DataGridTextCenterColumnStyle}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button Style="{StaticResource ButtonSuccess}" Background="{StaticResource SecondaryBorderBrush}"
+                        hc:BorderElement.CornerRadius="10" Width="180" Height="40" FontSize="20" Margin="0 10 0 20"
+                        Cursor="Hand" Command="{Binding GoToEndCommand}">
+                    下一步
+                </Button>
+            </StackPanel>
+        </Grid>
+        <!--结束-->
+        <Grid Name="EndGrid" Grid.Row="1" Visibility="{Binding CurrentWizardModel.EndPageVisibility}">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock HorizontalAlignment="Center" FontSize="30">设置完成</TextBlock>
+                <TextBlock FontSize="18" Margin="0 10" HorizontalAlignment="Center" Foreground="#666F79"
+                           TextAlignment="Center"
+                           Text="本界面将不再显示，如果您想再次看到，&#x000A;可以通过 主菜单->向导 重新开启。" />
+                <svg:SvgViewbox Source="/img/success.svg" Width="100" Margin="0 50" />
+                <Button Style="{StaticResource ButtonSuccess}" hc:BorderElement.CornerRadius="10" Width="180"
+                        Height="40" FontSize="20" Margin="0 10 0 20"
+                        Cursor="Hand" Content="完成"  Command="{Binding GoToMainPageCommand}"/>
+
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

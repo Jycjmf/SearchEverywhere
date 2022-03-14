@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
+using HandyControl.Controls;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using SearchEverywhere.Model;
 using SearchEverywhere.Model.Message;
@@ -75,21 +76,30 @@ internal class ProcessUtility
 
     private async Task<List<ListItemModel>> GetInitAppsAsync()
     {
-        var tempList = new List<ListItemModel>();
-        await Task.Run(async () =>
+        try
         {
-            var processes = Process.GetProcesses().Where(x => x.MainWindowTitle.Length > 0);
-            foreach (var eachProcess in processes)
+            var tempList = new List<ListItemModel>();
+            await Task.Run(async () =>
             {
-                if (eachProcess.MainModule == null)
-                    continue;
-                var tempItem = await GetProcessInfo(eachProcess);
-                tempList.Add(tempItem);
-            }
+                var processes = Process.GetProcesses().Where(x => x.MainWindowTitle.Length > 0);
+                foreach (var eachProcess in processes)
+                {
+                    if (eachProcess.MainModule == null)
+                        continue;
+                    var tempItem = await GetProcessInfo(eachProcess);
+                    tempList.Add(tempItem);
+                }
 
-            Console.WriteLine("res");
-        });
-        return tempList;
+                Console.WriteLine("res");
+            });
+            return tempList;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            MessageBox.Show(e.ToString(), "Exception Catch");
+            return new List<ListItemModel>();
+        }
     }
 
     private async Task<ListItemModel> GetProcessInfo(Process eachProcess)
@@ -103,20 +113,28 @@ internal class ProcessUtility
 
     private async Task<string> GetRamUsage(Process process)
     {
-        var memsize = 0; // memsize in KB
-        var PC = new PerformanceCounter();
-        var memoryString = string.Empty;
-        await Task.Run(() =>
+        try
         {
-            PC.CategoryName = "Process";
-            PC.CounterName = "Working Set - Private";
-            PC.InstanceName = process.ProcessName;
-            memsize = Convert.ToInt32(PC.NextValue());
-            memoryString = FileUtility.ConvertSize(memsize);
-            PC.Close();
-            PC.Dispose();
-        });
+            var memsize = 0; // memsize in KB
+            var PC = new PerformanceCounter();
+            var memoryString = string.Empty;
+            await Task.Run(() =>
+            {
+                PC.CategoryName = "Process";
+                PC.CounterName = "Working Set - Private";
+                PC.InstanceName = process.ProcessName;
+                memsize = Convert.ToInt32(PC.NextValue());
+                memoryString = FileUtility.ConvertSize(memsize);
+                PC.Close();
+                PC.Dispose();
+            });
 
-        return memoryString;
+            return memoryString;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return "Unknown KB";
+        }
     }
 }

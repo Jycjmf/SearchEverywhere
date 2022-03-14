@@ -22,6 +22,7 @@ public class MainViewModel : ObservableRecipient
 {
     private const uint SW_RESTORE = 0x09;
     private static readonly Everything.Everything everything = new();
+    private readonly ConfigurationUtility config = new();
     private readonly IView iview;
     private readonly PreviewUtility previewUtility = new();
     private readonly ProcessUtility processUtility;
@@ -31,13 +32,15 @@ public class MainViewModel : ObservableRecipient
     private ObservableCollection<ListItemModel> runningAppsList = new();
 
     private ObservableCollection<ListItemModel> searchResultList = new();
+    private Visibility searchVisibility = Visibility.Hidden;
 
     private Dictionary<int, bool> selectedItem = new() {{0, false}, {1, true}, {2, false}, {3, false}};
-
     private int selectIndex;
+    private Visibility wizardVisibility = Visibility.Visible;
 
     public MainViewModel(IView iView)
     {
+        CheckNeedWizard();
         processUtility = new ProcessUtility();
         processUtility.TrackNewProcess();
         searchPendingTimer = new Timer(CheckSearchKeyword, null, 200, 0);
@@ -97,6 +100,41 @@ public class MainViewModel : ObservableRecipient
             InitAppListHandler);
         WeakReferenceMessenger.Default.Register<MainViewModel, RefreshProcessModel, string>(this, "RefreshApplistToken",
             RefreshAppListHandler);
+        WeakReferenceMessenger.Default.Register<MainViewModel, string, string>(this, "SwitchPageToken",
+            (r, msg) =>
+            {
+                config.SetFirstUsage(false);
+                if (msg == "true")
+                {
+                    r.SearchVisibility = Visibility.Visible;
+                    r.WizardVisibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    r.SearchVisibility = Visibility.Collapsed;
+                    r.WizardVisibility = Visibility.Visible;
+                }
+            });
+    }
+
+    public Visibility WizardVisibility
+    {
+        get => wizardVisibility;
+        set
+        {
+            SetProperty(ref wizardVisibility, value);
+            OnPropertyChanged();
+        }
+    }
+
+    public Visibility SearchVisibility
+    {
+        get => searchVisibility;
+        set
+        {
+            SetProperty(ref searchVisibility, value);
+            OnPropertyChanged();
+        }
     }
 
     public ICommand NullCommand { get; }
@@ -179,6 +217,20 @@ public class MainViewModel : ObservableRecipient
     public ICommand UpCommand { get; }
     public ICommand DownCommand { get; }
     public ICommand PreviewCommand { get; }
+
+    private void CheckNeedWizard()
+    {
+        if (config.IsFirstUse())
+        {
+            SearchVisibility = Visibility.Collapsed;
+            WizardVisibility = Visibility.Visible;
+        }
+        else
+        {
+            SearchVisibility = Visibility.Visible;
+            WizardVisibility = Visibility.Collapsed;
+        }
+    }
 
     private void InitAppListHandler(MainViewModel recipient, List<ListItemModel> message)
     {

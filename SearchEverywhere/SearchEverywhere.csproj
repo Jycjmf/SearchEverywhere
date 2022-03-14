@@ -140,6 +140,9 @@
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI, Version=2.5.5.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.5.5\lib\net45\NPOI.dll</HintPath>
     </Reference>
@@ -409,6 +412,9 @@
     <Reference Include="XamlFlair.WPF, Version=1.2.13.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\XamlFlair.WPF.1.2.13\lib\net472\XamlFlair.WPF.dll</HintPath>
     </Reference>
+    <Reference Include="YamlDotNet, Version=4.3.1.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.Signed.4.3.1\lib\net45\YamlDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -433,6 +439,7 @@
     <Compile Include="Converter\WidthConverter.cs" />
     <Compile Include="Everything\Everything.cs" />
     <Compile Include="Model\AnimationModel.cs" />
+    <Compile Include="Model\AppSettings.cs" />
     <Compile Include="Model\CurrentTimeModel.cs" />
     <Compile Include="Model\KeyValueModel.cs" />
     <Compile Include="Model\ListboxItemModel.cs" />
@@ -445,7 +452,11 @@
     <Compile Include="Model\SuccessModel.cs" />
     <Compile Include="Model\VideoSliderModel.cs" />
     <Compile Include="Model\VisibilityModel.cs" />
+    <Compile Include="Model\Wizard\ShortcutModel.cs" />
+    <Compile Include="Model\Wizard\StaticShortcutModel.cs" />
+    <Compile Include="Model\Wizard\WizardModel.cs" />
     <Compile Include="Model\WordContentModel.cs" />
+    <Compile Include="Utility\ConfigurationUtility.cs" />
     <Compile Include="Utility\ConvertSize.cs" />
     <Compile Include="Utility\HotKeyUtility.cs" />
     <Compile Include="Utility\IconUtility.cs" />
@@ -457,6 +468,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\PreviewViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\WizardViewModel.cs" />
     <Compile Include="View\PreviewView.xaml.cs">
       <DependentUpon>PreviewView.xaml</DependentUpon>
     </Compile>
@@ -535,7 +547,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="img\about.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="img\application.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\success.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="img\cover.png">
@@ -559,6 +577,9 @@
     <Content Include="img\icons\document.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="img\icons\Everything.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="img\icons\exe.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -566,6 +587,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="img\icons\image.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\icons\LAV.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="img\icons\powerpoint.svg">

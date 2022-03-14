@@ -18,6 +18,7 @@ public partial class App : Application
                 .AddScoped<IView, PreviewWindow>()
                 .AddSingleton<MainViewModel>()
                 .AddSingleton<PreviewViewModel>()
+                .AddSingleton<WizardViewModel>()
                 .BuildServiceProvider());
     }
 }
