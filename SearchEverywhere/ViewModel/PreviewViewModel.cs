@@ -9,9 +9,11 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using SearchEverywhere.Model;
+using SearchEverywhere.Utility;
 using SearchEverywhere.Utility.office;
 using TagLib;
 using File = System.IO.File;
@@ -20,8 +22,10 @@ namespace SearchEverywhere.ViewModel;
 
 public class PreviewViewModel : ObservableRecipient
 {
+    private readonly ConfigurationUtility config = Ioc.Default.GetService<ConfigurationUtility>();
     private PreviewModel currentPreviewModel = new();
     private bool isManualChangeSlider;
+
 
     public PreviewViewModel()
     {
@@ -111,6 +115,7 @@ public class PreviewViewModel : ObservableRecipient
                 else
                     SwitchLayout(false);
             });
+        CurrentPreviewModel.FontSize = config.appSettings.FontSize;
         ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Unknown);
     }
 

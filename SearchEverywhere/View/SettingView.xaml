@@ -1,0 +1,145 @@
+﻿<UserControl x:Class="SearchEverywhere.View.SettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding Source={StaticResource ViewModelLocator},Path=settingViewModel}">
+    <Grid Background="#FBFAFF">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition />
+            <RowDefinition Height="0.5*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="0.6*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20 0 0 0">
+            <svg:SvgViewbox Source="/img/setting.svg" Width="30" VerticalAlignment="Center" />
+            <TextBlock FontSize="30" Text="设置" VerticalAlignment="Center" FontWeight="Bold" Margin="10 0" />
+        </StackPanel>
+        <!--主题设置-->
+        <Border Grid.Row="2" Background="White" Margin="20" CornerRadius="10" Effect="{StaticResource EffectShadow3}"
+                Grid.RowSpan="2">
+            <Grid>
+                <StackPanel Orientation="Vertical" Margin="15" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 30">
+                        <svg:SvgViewbox Source="/img/star.svg" Width="25" Margin="5 0" />
+                        <TextBlock FontSize="25" FontWeight="Bold" Text="个性化选项" />
+                    </StackPanel>
+                    <UniformGrid Columns="2" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <svg:SvgViewbox Source="/img/themecolor.svg" Width="25" Margin="5 0"
+                                            VerticalAlignment="Center" />
+                            <TextBlock FontSize="20" Text="主题色：" VerticalAlignment="Center" />
+                            <Button Width="50" Height="30" Background="{DynamicResource ThemeColor}"
+                                    Command="{Binding ChangeThemeCommand}"
+                                    Cursor="" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <svg:SvgViewbox Source="/img/accent.svg" Width="25" Margin="5 0" VerticalAlignment="Center" />
+                            <TextBlock FontSize="20" Text="强调色：" VerticalAlignment="Center" />
+                            <Button Width="50" Height="30" Background="{DynamicResource AccentBrush}"
+                                    Command="{Binding ChangeAccentCommand}"
+                                    Cursor="Hand" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </UniformGrid>
+
+                    <UniformGrid Columns="2" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Margin="0 20 0 0">
+                            <svg:SvgViewbox Source="/img/auto start.svg" Width="25" Margin="5 0" />
+                            <TextBlock FontSize="20" Text="开机自启动：" />
+                            <ToggleButton Style="{StaticResource ToggleButtonSwitch }" IsChecked="{Binding AutoRun}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0 20 0 0">
+                            <svg:SvgViewbox Source="/img/DND.svg" Width="25" Margin="5 0" />
+                            <TextBlock FontSize="20" Text="静默启动：" />
+                            <ToggleButton Style="{StaticResource ToggleButtonSwitch }" IsChecked="{Binding SlienceRun}"/>
+                        </StackPanel>
+                    </UniformGrid>
+
+                    <StackPanel Orientation="Horizontal" Margin="0 20 0 0">
+                        <svg:SvgViewbox Source="/img/delay.svg" Width="25" Margin="5 0" />
+                        <TextBlock FontSize="20" Text="文件搜索延迟：" />
+                        <Slider Maximum="1000" Minimum="100" Value="{Binding SearchDelay}" Width="200"
+                                VerticalAlignment="Center"
+                                IsSnapToTickEnabled="True" TickFrequency="50" FocusVisualStyle="{x:Null}" />
+                        <TextBlock FontSize="20" Text="{Binding  Path=SearchDelay,StringFormat='\{0}ms'}"
+                                   VerticalAlignment="Center" Margin="10 0 0 0" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0 20 0 0">
+                        <svg:SvgViewbox Source="/img/font.svg" Width="25" Margin="5 0" />
+                        <TextBlock FontSize="20" Text="预览默认字体大小：" />
+                        <Slider Maximum="100" Minimum="1" Value="{Binding Fontsize}" Width="200"
+                                VerticalAlignment="Center"
+                                TickFrequency="1" IsSnapToTickEnabled="True" FocusVisualStyle="{x:Null}" />
+                        <TextBlock FontSize="20" Text="{Binding Fontsize}" VerticalAlignment="Center" Margin="10 0 0 0" />
+                    </StackPanel>
+                    <UniformGrid Columns="2" Margin="0 40 0 0">
+                        <Button Style="{StaticResource ButtonDanger}" Content="重置" FontSize="20" Width="100"
+                                Height="40" Cursor="Hand" Command="{Binding RestCommand}"/>
+                        <Button Style="{StaticResource ButtonSuccess}" Background="{DynamicResource PrimaryBrush}"
+                                Content="保存" FontSize="20" Width="100" Command="{Binding SaveCommand}"
+                                Height="40" Cursor="Hand" />
+                    </UniformGrid>
+
+                </StackPanel>
+            </Grid>
+        </Border>
+
+
+        <!--状态概览-->
+        <Border Grid.Row="2" Grid.Column="1" Background="White" Margin="0 20 20 20" CornerRadius="10"
+                Effect="{StaticResource EffectShadow3}">
+            <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <svg:SvgViewbox Source="/img/status.svg" Width="25" VerticalAlignment="Center" />
+                    <TextBlock FontSize="25" FontWeight="Bold" Text="状态概览：" VerticalAlignment="Center" Margin="10 0" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Margin="40 10  0 0">
+                        <TextBlock FontSize="20" Text="开机自启动：" />
+                        <svg:SvgViewbox Source="/img/success.svg" Width="20" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="40 10  0 0">
+                        <TextBlock FontSize="20" Text="LAVFilter服务：" />
+                        <svg:SvgViewbox Source="/img/success.svg" Width="20" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="40 10  0 0">
+                        <TextBlock FontSize="20" Text="Everything服务：" />
+                        <svg:SvgViewbox Source="/img/success.svg" Width="20" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="40 10  0 0">
+                        <TextBlock FontSize="20" Text="Powerpoint服务：" />
+                        <svg:SvgViewbox Source="/img/success.svg" Width="20" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <!--取色器-->
+        <hc:ColorPicker Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Grid.RowSpan="2"
+                        Effect="{StaticResource EffectShadow3}" Name="ColorPicker"
+                        Margin="0 10 0 0"
+                        SelectedBrush="{Binding SelectedColorBrush,Mode=TwoWay}"
+                        Visibility="{Binding ColorPickerVisibility}">
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="Confirmed">
+                    <behaviors:InvokeCommandAction Command="{Binding ConfirmColorCommand}" />
+                </behaviors:EventTrigger>
+                <behaviors:EventTrigger EventName="Canceled">
+                    <behaviors:InvokeCommandAction Command="{Binding CancelColorCommand}" />
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
+        </hc:ColorPicker>
+    </Grid>
+</UserControl>

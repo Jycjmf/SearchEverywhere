@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using SearchEverywhere.Model;
@@ -22,21 +23,20 @@ public class MainViewModel : ObservableRecipient
 {
     private const uint SW_RESTORE = 0x09;
     private static readonly Everything.Everything everything = new();
-    private readonly ConfigurationUtility config = new();
+    private readonly ConfigurationUtility config = Ioc.Default.GetService<ConfigurationUtility>();
     private readonly IView iview;
     private readonly PreviewUtility previewUtility = new();
     private readonly ProcessUtility processUtility;
     private readonly Timer searchPendingTimer;
     private ListItemModel currentApp;
+    private MainUiElementModel currentUIVisibility = new();
     private string keyword;
     private ObservableCollection<ListItemModel> runningAppsList = new();
 
     private ObservableCollection<ListItemModel> searchResultList = new();
-    private Visibility searchVisibility = Visibility.Hidden;
-
     private Dictionary<int, bool> selectedItem = new() {{0, false}, {1, true}, {2, false}, {3, false}};
     private int selectIndex;
-    private Visibility wizardVisibility = Visibility.Visible;
+
 
     public MainViewModel(IView iView)
     {
@@ -45,8 +45,24 @@ public class MainViewModel : ObservableRecipient
         processUtility.TrackNewProcess();
         searchPendingTimer = new Timer(CheckSearchKeyword, null, 200, 0);
         everything.InitSearch();
-        ChangeItemCommand = new RelayCommand<object>(x => { Console.WriteLine(x); });
-        NullCommand = new RelayCommand(() => { });
+        ChangePageCommand = new RelayCommand<string>(x =>
+        {
+            switch (Convert.ToInt32(x))
+            {
+                case 0:
+                    SwitchPage(MainUiElement.SearchView);
+                    break;
+                case 1:
+                    SwitchPage(MainUiElement.WizardView);
+                    break;
+                case 2:
+                    SwitchPage(MainUiElement.AboutView);
+                    break;
+                case 3:
+                    SwitchPage(MainUiElement.SettingView);
+                    break;
+            }
+        });
         InputTabCommand = new RelayCommand(() =>
         {
             var index = SelectedItem.First(i => i.Value).Key;
@@ -100,44 +116,27 @@ public class MainViewModel : ObservableRecipient
             InitAppListHandler);
         WeakReferenceMessenger.Default.Register<MainViewModel, RefreshProcessModel, string>(this, "RefreshApplistToken",
             RefreshAppListHandler);
-        WeakReferenceMessenger.Default.Register<MainViewModel, string, string>(this, "SwitchPageToken",
+        WeakReferenceMessenger.Default.Register<MainViewModel, ChangeMainUiVisibilityModel, string>(this,
+            "SwitchPageToken",
             (r, msg) =>
             {
-                config.SetFirstUsage(false);
-                if (msg == "true")
-                {
-                    r.SearchVisibility = Visibility.Visible;
-                    r.WizardVisibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    r.SearchVisibility = Visibility.Collapsed;
-                    r.WizardVisibility = Visibility.Visible;
-                }
+                config.appSettings.FirstUse = false;
+                SwitchPage(msg.Element);
             });
+        WeakReferenceMessenger.Default.Register<MainViewModel, string, string>(this, "GoToSearchToken",
+            (r, msg) => { SwitchPage(MainUiElement.SearchView); });
     }
 
-    public Visibility WizardVisibility
+    public MainUiElementModel CurrentUIVisibility
     {
-        get => wizardVisibility;
+        get => currentUIVisibility;
         set
         {
-            SetProperty(ref wizardVisibility, value);
+            SetProperty(ref currentUIVisibility, value);
             OnPropertyChanged();
         }
     }
 
-    public Visibility SearchVisibility
-    {
-        get => searchVisibility;
-        set
-        {
-            SetProperty(ref searchVisibility, value);
-            OnPropertyChanged();
-        }
-    }
-
-    public ICommand NullCommand { get; }
 
     public ICommand FullscreenCommand { get; }
 
@@ -211,25 +210,50 @@ public class MainViewModel : ObservableRecipient
         }
     }
 
-    public ICommand ChangeItemCommand { get; }
     public ICommand InputTabCommand { get; }
     public ICommand EnterCommand { get; }
     public ICommand UpCommand { get; }
     public ICommand DownCommand { get; }
     public ICommand PreviewCommand { get; }
+    public ICommand ChangePageCommand { get; }
+
+    private void SwitchPage(MainUiElement page)
+    {
+        switch (page)
+        {
+            case MainUiElement.SearchView:
+                CurrentUIVisibility.SearchVisibility = Visibility.Visible;
+                CurrentUIVisibility.WizardVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.AboutVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.SettingVisibility = Visibility.Collapsed;
+                return;
+            case MainUiElement.WizardView:
+                CurrentUIVisibility.SearchVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.WizardVisibility = Visibility.Visible;
+                CurrentUIVisibility.AboutVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.SettingVisibility = Visibility.Collapsed;
+                return;
+            case MainUiElement.AboutView:
+                CurrentUIVisibility.SearchVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.WizardVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.AboutVisibility = Visibility.Visible;
+                CurrentUIVisibility.SettingVisibility = Visibility.Collapsed;
+                return;
+            case MainUiElement.SettingView:
+                CurrentUIVisibility.SearchVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.WizardVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.AboutVisibility = Visibility.Collapsed;
+                CurrentUIVisibility.SettingVisibility = Visibility.Visible;
+                return;
+        }
+    }
 
     private void CheckNeedWizard()
     {
-        if (config.IsFirstUse())
-        {
-            SearchVisibility = Visibility.Collapsed;
-            WizardVisibility = Visibility.Visible;
-        }
+        if (config.appSettings.FirstUse)
+            SwitchPage(MainUiElement.WizardView);
         else
-        {
-            SearchVisibility = Visibility.Visible;
-            WizardVisibility = Visibility.Collapsed;
-        }
+            SwitchPage(MainUiElement.SearchView);
     }
 
     private void InitAppListHandler(MainViewModel recipient, List<ListItemModel> message)

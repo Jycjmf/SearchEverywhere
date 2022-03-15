@@ -440,10 +440,12 @@
     <Compile Include="Everything\Everything.cs" />
     <Compile Include="Model\AnimationModel.cs" />
     <Compile Include="Model\AppSettings.cs" />
+    <Compile Include="Model\ChangeMainUiVisibilityModel.cs" />
     <Compile Include="Model\CurrentTimeModel.cs" />
     <Compile Include="Model\KeyValueModel.cs" />
     <Compile Include="Model\ListboxItemModel.cs" />
     <Compile Include="Model\ListItemModel.cs" />
+    <Compile Include="Model\MainUiElementModel.cs" />
     <Compile Include="Model\Message\RefreshProcessModel.cs" />
     <Compile Include="Model\MusicTagModel.cs" />
     <Compile Include="Model\PlayStatusModel.cs" />
@@ -456,7 +458,9 @@
     <Compile Include="Model\Wizard\StaticShortcutModel.cs" />
     <Compile Include="Model\Wizard\WizardModel.cs" />
     <Compile Include="Model\WordContentModel.cs" />
+    <Compile Include="Utility\AutoRunUtility.cs" />
     <Compile Include="Utility\ConfigurationUtility.cs" />
+    <Compile Include="Utility\ConvertColor.cs" />
     <Compile Include="Utility\ConvertSize.cs" />
     <Compile Include="Utility\HotKeyUtility.cs" />
     <Compile Include="Utility\IconUtility.cs" />
@@ -467,6 +471,7 @@
     <Compile Include="Utility\ProcessUtility.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\PreviewViewModel.cs" />
+    <Compile Include="ViewModel\SettingViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\WizardViewModel.cs" />
     <Compile Include="View\PreviewView.xaml.cs">
@@ -477,6 +482,9 @@
     </Compile>
     <Compile Include="View\SearchView.xaml.cs">
       <DependentUpon>SearchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingView.xaml.cs">
+      <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\WizardView.xaml.cs">
       <DependentUpon>WizardView.xaml</DependentUpon>
@@ -506,6 +514,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SearchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SettingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -550,10 +562,37 @@
     <Content Include="img\about.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="img\accent.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="img\application.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="img\auto start.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\delay.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\DND.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\error.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\font.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\star.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\status.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="img\success.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\themecolor.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="img\cover.png">

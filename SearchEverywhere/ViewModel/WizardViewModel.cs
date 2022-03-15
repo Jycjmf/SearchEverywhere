@@ -5,14 +5,18 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using SearchEverywhere.Model;
 using SearchEverywhere.Model.Wizard;
+using SearchEverywhere.Utility;
 
 namespace SearchEverywhere.ViewModel;
 
 public class WizardViewModel : ObservableRecipient
 {
+    private readonly ConfigurationUtility config = Ioc.Default.GetService<ConfigurationUtility>();
     private readonly int maxPage = 0;
     private int currentPage;
     private WizardModel currentWizardModel = new();
@@ -27,7 +31,11 @@ public class WizardViewModel : ObservableRecipient
             {
                 CurrentPage--;
                 SwitchPage(CurrentPage);
+                return;
             }
+
+            if (!config.appSettings.FirstUse)
+                WeakReferenceMessenger.Default.Send("", "GoToSearchToken");
         });
         GoToEngineCommand = new RelayCommand(() =>
             {
@@ -53,7 +61,9 @@ public class WizardViewModel : ObservableRecipient
         CurrentWizardModel.ShortcutList.Add(new StaticShortcutModel("切换选中程序到前台", "Enter"));
         CurrentWizardModel.Tips = "请稍后";
         CurrentWizardModel.EnvironmentError = false;
-        GoToMainPageCommand = new RelayCommand(() => WeakReferenceMessenger.Default.Send("true", "SwitchPageToken"));
+        GoToMainPageCommand = new RelayCommand(() =>
+            WeakReferenceMessenger.Default.Send(new ChangeMainUiVisibilityModel(MainUiElement.SearchView),
+                "SwitchPageToken"));
     }
 
     public ICommand GoToMainPageCommand { get; }

@@ -4,7 +4,6 @@
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:hc="https://handyorg.github.io/handycontrol"
-           xmlns:converter="clr-namespace:SearchEverywhere.Converter"
            xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
            xmlns:local="clr-namespace:SearchEverywhere.View"
            mc:Ignorable="d"
@@ -32,10 +31,15 @@
             <ColumnDefinition Width="80" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
+        <Grid Grid.Row="0" Grid.RowSpan="4" Grid.Column="1"
+              Visibility="{Binding CurrentUIVisibility.SettingVisibility}"
+              WindowChrome.IsHitTestVisibleInChrome="False">
+            <local:SettingView />
+        </Grid>
 
         <!--左侧导航栏-->
-        <Grid Grid.Column="0" Grid.RowSpan="4" Background="White" Focusable="False" Visibility="{Binding SearchVisibility}">
+        <Grid Grid.Column="0" Grid.RowSpan="4" Background="White" Focusable="False"
+              Visibility="{Binding SearchVisibility}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
                 <RowDefinition />
@@ -45,32 +49,32 @@
             </Grid>
             <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="0 70 0 0">
                 <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="True" HorizontalAlignment="Stretch"
-                             FocusVisualStyle="{x:Null}">
-                    <!--<svgc:SvgViewbox Source="img/dashboard.svg" Grid.Row="1" Margin="4 5" />-->
+                             FocusVisualStyle="{x:Null}" Command="{Binding ChangePageCommand}" CommandParameter="0">
                     <svgc:SvgViewbox Source="img/dashboard.svg" Grid.Row="1" Margin="4 5" />
                 </RadioButton>
                 <RadioButton Style="{StaticResource RadioButtonIcon}" HorizontalAlignment="Stretch" Margin="0 10"
-                             FocusVisualStyle="{x:Null}">
+                             FocusVisualStyle="{x:Null}" Command="{Binding ChangePageCommand}" CommandParameter="1">
                     <svgc:SvgViewbox Source="img/application.svg" Grid.Row="1" Margin="5" />
                 </RadioButton>
-                <RadioButton Style="{StaticResource RadioButtonIcon}" HorizontalAlignment="Stretch" Margin="0 10" 
-                             FocusVisualStyle="{x:Null}">
-                    <svgc:SvgViewbox Source="img/about.svg" Grid.Row="1" Margin="1" Width="21"/>
+                <RadioButton Style="{StaticResource RadioButtonIcon}" HorizontalAlignment="Stretch" Margin="0 10"
+                             FocusVisualStyle="{x:Null}" Command="{Binding ChangePageCommand}" CommandParameter="2">
+                    <svgc:SvgViewbox Source="img/about.svg" Grid.Row="1" Margin="1" Width="21" />
                 </RadioButton>
                 <RadioButton Style="{StaticResource RadioButtonIcon}" HorizontalAlignment="Stretch" Margin="0 10"
-                             FocusVisualStyle="{x:Null}">
+                             FocusVisualStyle="{x:Null}" Command="{Binding ChangePageCommand}" CommandParameter="3">
                     <svgc:SvgViewbox Source="img/setting.svg" Grid.Row="1" Margin="5" />
                 </RadioButton>
             </StackPanel>
         </Grid>
-        <local:SearchView x:Name="PreviewControl" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Visibility="{Binding SearchVisibility}"/>
+        <local:SearchView x:Name="PreviewControl" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
+                          Visibility="{Binding CurrentUIVisibility.SearchVisibility}" />
         <Border Grid.Row="0" Grid.RowSpan="4" Grid.Column="0" Width="1" HorizontalAlignment="Right"
                 Background="{StaticResource BorderBrush}"
                 VerticalAlignment="Stretch" />
-        <Grid Grid.Row="0" Grid.RowSpan="4" Grid.ColumnSpan="2" Grid.Column="0" Visibility="{Binding WizardVisibility}" WindowChrome.IsHitTestVisibleInChrome="False" >
+        <Grid Grid.Row="0" Grid.RowSpan="4" Grid.ColumnSpan="2" Grid.Column="0"
+              Visibility="{Binding CurrentUIVisibility.WizardVisibility}" WindowChrome.IsHitTestVisibleInChrome="False">
             <local:WizardView />
         </Grid>
-  
     </Grid>
 
 </hc:Window>

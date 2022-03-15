@@ -12,6 +12,7 @@ namespace SearchEverywhere;
 public partial class MainWindow
 {
     public static Action<bool> ChangeWindowStateAction;
+    private readonly ConfigurationUtility config = Ioc.Default.GetService<ConfigurationUtility>();
     private readonly MainViewModel vm;
 
     public MainWindow()
@@ -84,7 +85,7 @@ public partial class MainWindow
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        //  Visibility = Visibility.Hidden;
+        if (config.appSettings.SilentWindows) Visibility = Visibility.Hidden;
         var hotkey = new HotKeyUtility();
     }
 }

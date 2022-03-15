@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-SPRK_default_preset_name_custom_1">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="SPRK_default_preset_name_custom_1" data-name="SPRK_default_preset_name_custom – 1" clip-path="url(#clip-SPRK_default_preset_name_custom_1)">
+    <g id="DND" transform="translate(6.024 -4.344)">
+      <path id="Path_1" data-name="Path 1" d="M349.256,445.344h-208.7a85.759,85.759,0,0,1-85.773-85.773V150.925a85.759,85.759,0,0,1,85.773-85.773H349.2a85.759,85.759,0,0,1,85.773,85.773V359.571A85.713,85.713,0,0,1,349.256,445.344Z" fill="#51459e"/>
+      <path id="Path_2" data-name="Path 2" d="M463.38,411.433c3.446-2.477,8.238,1.077,6.73,5.061a99.239,99.239,0,1,1-129.6-126.91c4.146-1.615,8.023,2.908,5.492,6.515a83.615,83.615,0,0,0-14.43,57.182c4.038,36.506,32.576,66.874,68.866,72.8a83.574,83.574,0,0,0,62.944-14.646Z" transform="translate(-129.254 -129.828)" fill="#fc9d10"/>
+    </g>
+  </g>
+</svg>

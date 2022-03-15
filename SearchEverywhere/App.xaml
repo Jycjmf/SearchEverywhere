@@ -10,7 +10,6 @@
             <SolidColorBrush Color="#51459E" x:Key="ThemeColor" />
             <SolidColorBrush Color="White" x:Key="TitleBrush" />
             <SolidColorBrush Color="#999999" x:Key="HighlightBorderBrush" />
-            <SolidColorBrush Color="#FC9D10" x:Key="HighlightBrush" /> <!--没啥用-->
             <SolidColorBrush Color="#FC9D10" x:Key="PrimaryBrush" />
             <!--<SolidColorBrush Color="#999999" x:Key="HighlightForeground" />-->
             <!--<SolidColorBrush Color="#999999" x:Key="PrimaryTextBrush" />-->
@@ -32,7 +31,7 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Foreground" TargetName="FilterText"
-                                            Value="{StaticResource SecondaryBorderBrush}" />
+                                            Value="{DynamicResource SecondaryBorderBrush}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>

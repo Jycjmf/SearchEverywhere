@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-SPRK_default_preset_name_custom_1">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="SPRK_default_preset_name_custom_1" data-name="SPRK_default_preset_name_custom – 1" clip-path="url(#clip-SPRK_default_preset_name_custom_1)">
+    <g id="ThemeColor" transform="translate(-48.661 -66.041)">
+      <path id="Path_1" data-name="Path 1" d="M456.006,206.57c-95.443-44.968-175.914,45.769-213.771,0-14.972-18.928,18.127-52.879,0-76.515-13.42-16.575-44.968-13.42-65.5,0C122.3,168.663,86,231.808,86,302.814c0,116.775,95.443,210.616,213.771,210.616,98.6,0,181.422-65.5,206.71-153.03,7.862-31.6,17.326-119.93-50.476-153.831Z" fill="#51459e"/>
+      <path id="Path_2" data-name="Path 2" d="M196.3,446.947a31.547,31.547,0,1,1,31.547,31.547A31.64,31.64,0,0,1,196.3,446.947Z" transform="translate(-55.067 -148.089)" fill="#fc9d10"/>
+      <path id="Path_3" data-name="Path 3" d="M317.647,658.095a31.547,31.547,0,1,1,31.547-31.547A31.64,31.64,0,0,1,317.647,658.095Z" transform="translate(-99.899 -237.754)" fill="#8abe37"/>
+      <path id="Path_4" data-name="Path 4" d="M516.147,730.595a31.547,31.547,0,1,1,31.547-31.547A31.64,31.64,0,0,1,516.147,730.595Z" transform="translate(-199 -273.949)" fill="#178bcd"/>
+      <path id="Path_5" data-name="Path 5" d="M643.721,478.542a47.321,47.321,0,1,1,47.321-47.321A46.9,46.9,0,0,1,643.721,478.542Z" transform="translate(-254.816 -132.363)" fill="#eebc19"/>
+    </g>
+  </g>
+</svg>

@@ -25,7 +25,7 @@
                 <!--Zoom-->
                 <Border Height="2" Background="Black" Width="10" />
                 <Slider VerticalAlignment="Center" Width="150" Value="{Binding   CurrentPreviewModel.FontSize}"
-                        FocusVisualStyle="{x:Null}"
+                        FocusVisualStyle="{x:Null}" IsSnapToTickEnabled="True"
                         Maximum="100" Minimum="1"
                         TabIndex="-1" />
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" FontWeight="Bold">+</TextBlock>

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using SearchEverywhere.Utility;
 using SearchEverywhere.View;
 using SearchEverywhere.ViewModel;
 
@@ -19,6 +20,8 @@ public partial class App : Application
                 .AddSingleton<MainViewModel>()
                 .AddSingleton<PreviewViewModel>()
                 .AddSingleton<WizardViewModel>()
+                .AddSingleton<SettingViewModel>()
+                .AddSingleton<ConfigurationUtility>()
                 .BuildServiceProvider());
     }
 }

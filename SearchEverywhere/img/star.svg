@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-SPRK_default_preset_name_custom_1">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="SPRK_default_preset_name_custom_1" data-name="SPRK_default_preset_name_custom – 1" clip-path="url(#clip-SPRK_default_preset_name_custom_1)">
+    <path id="star" d="M388.024,397.919c41.417,40.822-3.483-3.309,0,0ZM236.277,44.559a15.937,15.937,0,0,1,5.645,5.588l54.07,94.527,108.084,21.544a14.593,14.593,0,0,1,11.578,16.9,12.769,12.769,0,0,1-3.687,7.028L337.582,270l12.538,107.911a14.459,14.459,0,0,1-12.807,15.937,14.977,14.977,0,0,1-7.872-1.152L229.23,347.477l-100.192,45.2A14.651,14.651,0,0,1,108.4,377.892l12.769-107.911L46.473,190.162a14.247,14.247,0,0,1,.768-20.276,18.318,18.318,0,0,1,7.143-3.648l108.1-21.544,54.032-94.547A14.651,14.651,0,0,1,236.258,44.5c-.1,0,0,0,0,.058v.019Zm179.8,204.858c47.234,46.6-6.582-6.3,0,0Z" transform="translate(-3.606 -3.62)" fill="#51459e"/>
+    <g id="Rectangle_1" data-name="Rectangle 1" transform="translate(170.605 409.904) rotate(-45)" fill="#fc9d10" stroke="#fc9d10" stroke-width="1">
+      <rect width="32" height="94" rx="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="31" height="93" rx="15.5" fill="none"/>
+    </g>
+    <g id="Rectangle_2" data-name="Rectangle 2" transform="translate(350.605 404.904) rotate(-45)" fill="#fc9d10" stroke="#fc9d10" stroke-width="1">
+      <rect width="32" height="94" rx="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="31" height="93" rx="15.5" fill="none"/>
+    </g>
+    <g id="Rectangle_3" data-name="Rectangle 3" transform="translate(378.605 256.904) rotate(-45)" fill="#fc9d10" stroke="#fc9d10" stroke-width="1">
+      <rect width="32" height="94" rx="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="31" height="93" rx="15.5" fill="none"/>
+    </g>
+  </g>
+</svg>

@@ -117,11 +117,9 @@
         <Grid Grid.Row="1" Grid.Column="0" Margin="20 0" Background="White"
               WindowChrome.IsHitTestVisibleInChrome="True" Name="TopNavbar">
             <UniformGrid Columns="4">
-                <RadioButton Content="全部结果" IsChecked="{Binding SelectedItem[0]}" Command="{Binding ChangeItemCommand}"
-                             CommandParameter="0" hc:BorderElement.CornerRadius="0"
+                <RadioButton Content="全部结果" IsChecked="{Binding SelectedItem[0]}" hc:BorderElement.CornerRadius="0"
                              Style="{StaticResource TopMenuStyle}" />
-                <RadioButton Content="近期任务" IsChecked="{Binding SelectedItem[1]}" Command="{Binding ChangeItemCommand}"
-                             CommandParameter="1" hc:BorderElement.CornerRadius="0"
+                <RadioButton Content="近期任务" IsChecked="{Binding SelectedItem[1]}" hc:BorderElement.CornerRadius="0"
                              Style="{StaticResource TopMenuStyle}" />
                 <RadioButton Content="本地磁盘" IsChecked="{Binding SelectedItem[2]}" hc:BorderElement.CornerRadius="0"
                              Style="{StaticResource TopMenuStyle}" />
@@ -327,10 +325,6 @@
         <ListView Grid.Row="3" ItemsSource="{Binding SearchResultList,Mode=OneWay}" Grid.Column="0"
                   ItemContainerStyle="{StaticResource ItemStyle}" SelectedIndex="{Binding SelectIndex}"
                   BorderThickness="0" Margin="30 10 30 0" Background="White" Name="ResultListView">
-            <ListView.InputBindings>
-                <KeyBinding Key="Up" Command="{Binding NullCommand}" />
-                <KeyBinding Key="Down" Command="{Binding NullCommand}" />
-            </ListView.InputBindings>
             <ListView.View>
                 <GridView ColumnHeaderContainerStyle="{StaticResource HeaderStyle}">
                     <GridViewColumn />
