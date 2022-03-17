@@ -12,7 +12,7 @@ public class WizardModel : ObservableObject
 
     private bool environmentReady;
     private Visibility exitButtonVisibility = Visibility.Collapsed;
-    private string fontColor = "0";
+    private string fontColor = "#000000";
 
     private bool loadingAnimation = true;
     private Visibility loadingAnimationVisibility = Visibility.Visible;

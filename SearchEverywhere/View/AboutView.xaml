@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="SearchEverywhere.View.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d"
+             xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid Name="WelcomeGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="180" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Margin="0 50 0 0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock FontSize="50" VerticalAlignment="Center" FontWeight="Bold">SearchEverywhere</TextBlock>
+                    <Image Source="/img/logo.png" Width="60" RenderOptions.BitmapScalingMode="HighQuality" />
+                </StackPanel>
+                <TextBlock FontSize="20" Margin="0 10 0 0">快速多任务切换 | 毫秒级文件搜索 | 常用格式预览 | 遵循MVVM模式</TextBlock>
+                <Button Style="{DynamicResource ButtonInfo}" Background="{DynamicResource SecondaryBorderBrush}"
+                        Width="130" Height="40" Content="Github 地址"
+                        hc:IconElement.Geometry="{StaticResource GithubGeometry}"
+                        Margin="0 50 0 0" Cursor="Hand" />
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Vertical">
+                <TextBlock FontSize="25" HorizontalAlignment="Center" FontWeight="Bold">特别感谢</TextBlock>
+                <UniformGrid Columns="3" Margin="20">
+                    <StackPanel Orientation="Vertical">
+                        <svg:SvgViewbox Source="/img/icons/VS.svg" Width="50" />
+                        <TextBlock FontSize="15" Margin="0 5 0 0" HorizontalAlignment="Center">Visual Studio</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="0 3 0 0">
+                        <svg:SvgViewbox Source="/img/icons/.NET.svg" Width="50" />
+                        <TextBlock FontSize="15" Margin="0 5 0 0" HorizontalAlignment="Center">.Net Framework</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <svg:SvgViewbox Source="/img/icons/ReSharper_icon.svg" Width="50" />
+                        <TextBlock FontSize="15" Margin="0 5 0 0" HorizontalAlignment="Center">Resharper</TextBlock>
+                    </StackPanel>
+                </UniformGrid>
+            </StackPanel>
+            <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#666F79"
+                       FontSize="15" Margin="0 0 0 20">
+                遵循GPL V3协议的开源程序
+            </TextBlock>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Win32;
 using SearchEverywhere.Model;
 
@@ -13,7 +14,7 @@ internal class AutoRunUtility
         try
         {
             var reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            var path = AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName;
+            var path = Assembly.GetExecutingAssembly().Location;
             reg.SetValue("SearchEverywhere", path);
             return res;
         }

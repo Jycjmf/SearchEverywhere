@@ -325,7 +325,7 @@
                           xf:Animations.SecondaryBinding="{Binding CurrentPreviewModel.AnimationConfig.LoadingAnimation,
                     Converter={StaticResource ReverseBooleanConverter}}" />
             </Grid>
-
+            <!--初始界面-->
             <Grid Grid.Row="1" Visibility="{Binding CurrentPreviewModel.ElementVisibility.UnknownVisibility}">
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                     <svgc:SvgViewbox Source="/img/icons/unknown.svg" Width="100" Height="100"
@@ -351,10 +351,10 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 5 0 0"
                                 Visibility="{Binding CurrentPreviewModel.FirstTipsVisibility}">
-                        <Border Background="{StaticResource BorderBrush}" Width="70" Height="20" CornerRadius="5">
+                        <Border Background="{StaticResource BorderBrush}" Width="90" Height="20" CornerRadius="5">
                             <TextBlock FontSize="15"
                                        HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                       Text="Ctrl + Alt" />
+                                       Text="Ctrl + Enter" />
                         </Border>
                         <TextBlock FontSize="{Binding CurrentPreviewModel.SubTitleFontSize}"
                                    HorizontalAlignment="Center" VerticalAlignment="Center" Text="进行快速预览吧" />

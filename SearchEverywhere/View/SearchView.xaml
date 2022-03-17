@@ -8,10 +8,12 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
              mc:Ignorable="d" Background="White"
-             DataContext="{Binding Source={StaticResource ViewModelLocator},Path=mainViewModel}" Loaded="SearchView_OnLoaded" IsVisibleChanged="SearchView_OnIsVisibleChanged"
+             DataContext="{Binding Source={StaticResource ViewModelLocator},Path=mainViewModel}"
+             Loaded="SearchView_OnLoaded" IsVisibleChanged="SearchView_OnIsVisibleChanged"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <system:String x:Key="IconWidthRate">1.5</system:String>
+        <converter:NullableStringConverter x:Key="NullableStringConverter"/>
         <converter:NormalCurrentTitleConverter x:Key="NormalTitleConverter" />
         <converter:SvgPathConverter x:Key="SvgPathConverter" />
         <converter:IconSvgVisibilityConverter x:Key="SvgVisibilityConverter" />
@@ -168,7 +170,7 @@
                           BorderBrush="Black"
                           hc:VisualElement.HighlightBorderBrush="{DynamicResource PrimaryBrush}"
                           Style="{StaticResource SearchBarExtend}" hc:BorderElement.CornerRadius="0"
-                          Text="{Binding Keyword,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}" />
+                          Text="{Binding Keyword,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource NullableStringConverter}}" />
 
         </Grid>
 
@@ -254,7 +256,7 @@
                             Height="{Binding RelativeSource={RelativeSource Self},Path=Width}"
                             RenderOptions.BitmapScalingMode="HighQuality"
                             Visibility="{Binding CurrentApp,Converter={StaticResource BmpVisibilityConverter}}" />
-                        <svgc:SvgViewbox Source="{Binding CurrentApp.SvgIcon}"
+                        <svgc:SvgViewbox Source="{Binding CurrentApp.SvgIcon,Mode=OneWay}"
                                          Width="{Binding ElementName=StatusBorder, Path=ActualWidth,Converter={StaticResource IconSizeConverter},ConverterParameter=2}"
                                          Height="{Binding RelativeSource={RelativeSource Self},Path=Width}"
                                          Visibility="{Binding CurrentApp,Converter={StaticResource SvgVisibilityConverter}}" />
@@ -274,7 +276,7 @@
             </Border>
             <TextBlock Grid.Row="3" Margin="20 5 0 0" FontSize="20" FontWeight="Bold" HorizontalAlignment="Left"
                        VerticalAlignment="Top">
-                结果预览
+                <!--结果预览-->
             </TextBlock>
             <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right"
                         WindowChrome.IsHitTestVisibleInChrome="True">

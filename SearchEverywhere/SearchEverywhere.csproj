@@ -424,6 +424,7 @@
     <Compile Include="Converter\IconBmpVisibilityConverter.cs" />
     <Compile Include="Converter\IconSvgVisibilityConverter.cs" />
     <Compile Include="Converter\NormalCurrentTitleConverter.cs" />
+    <Compile Include="Converter\NullableStringConverter.cs" />
     <Compile Include="Converter\PreviewConverter\AlignmentConverter.cs" />
     <Compile Include="Converter\PreviewConverter\ImageConverter.cs" />
     <Compile Include="Converter\PreviewConverter\KeywordConverter.cs" />
@@ -459,6 +460,7 @@
     <Compile Include="Model\Wizard\WizardModel.cs" />
     <Compile Include="Model\WordContentModel.cs" />
     <Compile Include="Utility\AutoRunUtility.cs" />
+    <Compile Include="Utility\CheckPermissionUtility.cs" />
     <Compile Include="Utility\ConfigurationUtility.cs" />
     <Compile Include="Utility\ConvertColor.cs" />
     <Compile Include="Utility\ConvertSize.cs" />
@@ -474,6 +476,9 @@
     <Compile Include="ViewModel\SettingViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\WizardViewModel.cs" />
+    <Compile Include="View\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PreviewView.xaml.cs">
       <DependentUpon>PreviewView.xaml</DependentUpon>
     </Compile>
@@ -505,6 +510,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\PreviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -581,6 +590,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="img\font.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\icons\.NET.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\icons\ReSharper_icon.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="img\icons\VS.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="img\star.svg">

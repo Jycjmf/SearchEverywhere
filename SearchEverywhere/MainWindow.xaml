@@ -38,8 +38,7 @@
         </Grid>
 
         <!--左侧导航栏-->
-        <Grid Grid.Column="0" Grid.RowSpan="4" Background="White" Focusable="False"
-              Visibility="{Binding SearchVisibility}">
+        <Grid Grid.Column="0" Grid.RowSpan="4" Background="White" Focusable="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
                 <RowDefinition />
@@ -48,7 +47,8 @@
                 <Image Source="img/logo.png" Margin="15" RenderOptions.BitmapScalingMode="HighQuality" />
             </Grid>
             <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="0 70 0 0">
-                <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="True" HorizontalAlignment="Stretch"
+                <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding FirstButtonChecked}"
+                             HorizontalAlignment="Stretch"
                              FocusVisualStyle="{x:Null}" Command="{Binding ChangePageCommand}" CommandParameter="0">
                     <svgc:SvgViewbox Source="img/dashboard.svg" Grid.Row="1" Margin="4 5" />
                 </RadioButton>
@@ -66,7 +66,7 @@
                 </RadioButton>
             </StackPanel>
         </Grid>
-        <local:SearchView x:Name="PreviewControl" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
+        <!--<local:SearchView x:Name="PreviewControl" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
                           Visibility="{Binding CurrentUIVisibility.SearchVisibility}" />
         <Border Grid.Row="0" Grid.RowSpan="4" Grid.Column="0" Width="1" HorizontalAlignment="Right"
                 Background="{StaticResource BorderBrush}"
@@ -74,7 +74,8 @@
         <Grid Grid.Row="0" Grid.RowSpan="4" Grid.ColumnSpan="2" Grid.Column="0"
               Visibility="{Binding CurrentUIVisibility.WizardVisibility}" WindowChrome.IsHitTestVisibleInChrome="False">
             <local:WizardView />
-        </Grid>
+        </Grid>-->
+        <local:AboutView Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" />
     </Grid>
 
 </hc:Window>

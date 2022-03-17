@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HandyControl.Controls;
 using SearchEverywhere.Model;
 using SearchEverywhere.Utility;
 
@@ -163,31 +164,39 @@ public class Everything
         var resList = new SuccessModel<List<ListItemModel>>(true, new List<ListItemModel>());
         await Task.Run(() =>
         {
-            SetSearch(keyword);
-            var isSuccess = QuerySearchResult(true);
-            if (!isSuccess)
+            try
             {
-                resList.IsSuccess = false;
-                return;
-            }
+                SetSearch(keyword);
+                var isSuccess = QuerySearchResult(true);
+                if (!isSuccess)
+                {
+                    resList.IsSuccess = false;
+                    return;
+                }
 
-            var totalResCount = GetNumberResult() <= limit ? GetNumberResult() : limit;
-            var buffer = new StringBuilder(256);
-            for (uint i = 0; i < totalResCount; i++)
+                var totalResCount = GetNumberResult() <= limit ? GetNumberResult() : limit;
+                var buffer = new StringBuilder(256);
+                for (uint i = 0; i < totalResCount; i++)
+                {
+                    var title = Marshal.PtrToStringUni(GetResultFileName(i));
+                    GetResultDateModified(i, out var date_modified);
+                    GetResultSize(i, out var size);
+                    if (size < 1024)
+                        continue;
+                    GetResultFullPathName(i, buffer, 256);
+                    var path = buffer.ToString();
+                    var modifyTime = DateTime.FromFileTime(date_modified);
+                    var sizeString = FileUtility.ConvertSize(size);
+                    var extension = Path.GetExtension(path);
+                    var svgIcon = ConvertIcon(extension);
+                    resList.Result.Add(new ListItemModel(null, title, IntPtr.Zero, modifyTime, sizeString, path,
+                        extension,
+                        new Uri(svgIcon, UriKind.Relative), 0));
+                }
+            }
+            catch (Exception e)
             {
-                var title = Marshal.PtrToStringUni(GetResultFileName(i));
-                GetResultDateModified(i, out var date_modified);
-                GetResultSize(i, out var size);
-                if (size < 1024)
-                    continue;
-                GetResultFullPathName(i, buffer, 256);
-                var path = buffer.ToString();
-                var modifyTime = DateTime.FromFileTime(date_modified);
-                var sizeString = FileUtility.ConvertSize(size);
-                var extension = Path.GetExtension(path);
-                var svgIcon = ConvertIcon(extension);
-                resList.Result.Add(new ListItemModel(null, title, IntPtr.Zero, modifyTime, sizeString, path, extension,
-                    svgIcon, 0));
+                MessageBox.Show(e.ToString(), "Exception Catch");
             }
         });
 

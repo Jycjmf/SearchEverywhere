@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-SPRK_default_preset_name_custom_1">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="SPRK_default_preset_name_custom_1" data-name="SPRK_default_preset_name_custom – 1" clip-path="url(#clip-SPRK_default_preset_name_custom_1)">
+    <rect width="500" height="500" fill="#4e2acd"/>
+    <text id="_.NET" data-name=".NET" transform="translate(51 333)" fill="#fff" font-size="200" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">.NET</tspan></text>
+  </g>
+</svg>

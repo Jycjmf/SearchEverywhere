@@ -15,12 +15,12 @@ public class ListItemModel : ObservableObject
     private string path;
 
     private string size;
-    private string svgIcon;
+    private Uri svgIcon;
 
     private string title;
 
     public ListItemModel(BitmapImage icon, string title, IntPtr hwnd, DateTime createTime, string size, string path,
-        string extension, string svgIcon, int processId)
+        string extension, Uri svgIcon, int processId)
     {
         Icon = icon;
         Title = title;
@@ -35,7 +35,7 @@ public class ListItemModel : ObservableObject
 
     public int ProcessId { get; set; }
 
-    public string SvgIcon
+    public Uri SvgIcon
     {
         get => svgIcon;
         set

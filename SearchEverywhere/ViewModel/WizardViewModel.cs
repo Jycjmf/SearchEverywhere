@@ -23,7 +23,6 @@ public class WizardViewModel : ObservableRecipient
 
     public WizardViewModel()
     {
-        InitEnvironment();
         CloseCommand = new RelayCommand(() => Application.Current.Shutdown());
         GoBackCommand = new RelayCommand(() =>
         {
@@ -35,11 +34,15 @@ public class WizardViewModel : ObservableRecipient
             }
 
             if (!config.appSettings.FirstUse)
+            {
                 WeakReferenceMessenger.Default.Send("", "GoToSearchToken");
+                WeakReferenceMessenger.Default.Send("", "CheckFirstButtonToken");
+            }
         });
         GoToEngineCommand = new RelayCommand(() =>
             {
                 CurrentPage = 1;
+                InitEnvironment();
                 SwitchPage(1);
             }
         );
@@ -62,8 +65,11 @@ public class WizardViewModel : ObservableRecipient
         CurrentWizardModel.Tips = "请稍后";
         CurrentWizardModel.EnvironmentError = false;
         GoToMainPageCommand = new RelayCommand(() =>
+        {
             WeakReferenceMessenger.Default.Send(new ChangeMainUiVisibilityModel(MainUiElement.SearchView),
-                "SwitchPageToken"));
+                "SwitchPageToken");
+            WeakReferenceMessenger.Default.Send("", "CheckFirstButtonToken");
+        });
     }
 
     public ICommand GoToMainPageCommand { get; }

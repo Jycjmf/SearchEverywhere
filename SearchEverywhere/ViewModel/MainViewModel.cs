@@ -30,6 +30,7 @@ public class MainViewModel : ObservableRecipient
     private readonly Timer searchPendingTimer;
     private ListItemModel currentApp;
     private MainUiElementModel currentUIVisibility = new();
+    private bool firstButtonChecked = true;
     private string keyword;
     private ObservableCollection<ListItemModel> runningAppsList = new();
 
@@ -37,10 +38,12 @@ public class MainViewModel : ObservableRecipient
     private Dictionary<int, bool> selectedItem = new() {{0, false}, {1, true}, {2, false}, {3, false}};
     private int selectIndex;
 
-
     public MainViewModel(IView iView)
     {
         CheckNeedWizard();
+        var permission = new CheckPermissionUtility();
+        if (!permission.IsAdministrator())
+            permission.ElevatePermission();
         processUtility = new ProcessUtility();
         processUtility.TrackNewProcess();
         searchPendingTimer = new Timer(CheckSearchKeyword, null, 200, 0);
@@ -77,6 +80,7 @@ public class MainViewModel : ObservableRecipient
                 SelectedItem[index] = true;
             }
 
+            StartAllSearch(keyword);
             OnPropertyChanged("SelectedItem");
         });
         EnterCommand = new RelayCommand(() =>
@@ -125,6 +129,18 @@ public class MainViewModel : ObservableRecipient
             });
         WeakReferenceMessenger.Default.Register<MainViewModel, string, string>(this, "GoToSearchToken",
             (r, msg) => { SwitchPage(MainUiElement.SearchView); });
+        WeakReferenceMessenger.Default.Register<MainViewModel, string, string>(this, "CheckFirstButtonToken",
+            (r, msg) => { FirstButtonChecked = true; });
+    }
+
+    public bool FirstButtonChecked
+    {
+        get => firstButtonChecked;
+        set
+        {
+            SetProperty(ref firstButtonChecked, value);
+            OnPropertyChanged();
+        }
     }
 
     public MainUiElementModel CurrentUIVisibility
@@ -181,10 +197,7 @@ public class MainViewModel : ObservableRecipient
         set
         {
             SetProperty(ref keyword, value);
-            StartProcessSearch(value);
-            if (SelectedItem[0] || SelectedItem[3])
-                searchPendingTimer.Change(200, 0);
-            CurrentApp = SearchResultList.First();
+            StartAllSearch(value);
             OnPropertyChanged();
         }
     }
@@ -216,6 +229,16 @@ public class MainViewModel : ObservableRecipient
     public ICommand DownCommand { get; }
     public ICommand PreviewCommand { get; }
     public ICommand ChangePageCommand { get; }
+
+    private void StartAllSearch(string value)
+    {
+        if (SelectedItem[0] || SelectedItem[1])
+            StartProcessSearch(value);
+        if (SelectedItem[0] || SelectedItem[2])
+            searchPendingTimer.Change(200, 0);
+        if (searchResultList.Any())
+            CurrentApp = SearchResultList.First();
+    }
 
     private void SwitchPage(MainUiElement page)
     {
@@ -262,6 +285,8 @@ public class MainViewModel : ObservableRecipient
         {
             RunningAppsList.Add(x);
             SearchResultList.Add(x);
+            if (RunningAppsList.Any())
+                CurrentApp = runningAppsList.First();
         });
     }
 
@@ -284,6 +309,13 @@ public class MainViewModel : ObservableRecipient
 
     private void StartProcessSearch(string keyword)
     {
+        if (string.IsNullOrWhiteSpace(keyword))
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SearchResultList.Clear();
+                foreach (var each in runningAppsList) SearchResultList.Add(each);
+                SelectIndex = 0;
+            });
         keyword = keyword.Replace(@"\", @"\\").Replace(".", "\\.");
         var raw = runningAppsList
             .Where(x => Regex.Matches(x.Title, keyword, RegexOptions.IgnoreCase).Count > 0)
