@@ -13,7 +13,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <system:String x:Key="IconWidthRate">1.5</system:String>
-        <converter:NullableStringConverter x:Key="NullableStringConverter"/>
+        <converter:NullableStringConverter x:Key="NullableStringConverter" />
         <converter:NormalCurrentTitleConverter x:Key="NormalTitleConverter" />
         <converter:SvgPathConverter x:Key="SvgPathConverter" />
         <converter:IconSvgVisibilityConverter x:Key="SvgVisibilityConverter" />
@@ -186,33 +186,10 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right"
                         WindowChrome.IsHitTestVisibleInChrome="True">
-                <ToggleButton Width="100" VerticalAlignment="Center" HorizontalAlignment="Right"
-                              Style="{StaticResource ToggleButtonSwitch}">
-                    显示详情
-                </ToggleButton>
+                <TextBlock VerticalAlignment="Center" Foreground="#A3ABBD">双击顶部最大化</TextBlock>
                 <!--全屏-->
-                <Button Name="FullScreenBtn" FontWeight="Bold" HorizontalAlignment="Right"
-                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                        </Style>
-                    </Button.Style>
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <TextBlock Name="FilterText" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       FontSize="18"
-                                       FontFamily="/Fonts/#iconfont" Text="&#xe8fa;"
-                                       Foreground="{TemplateBinding Foreground}" />
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" TargetName="FilterText"
-                                            Value="{StaticResource SecondaryBorderBrush}" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                <Button Name="FullScreenBtn" FontWeight="Bold" HorizontalAlignment="Right" Style="{StaticResource ButtonStyle}" Content="&#xe662;"
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0" FontSize="15"/>
             </StackPanel>
             <!--边框阴影-->
             <Border Grid.Row="2" Background="White" Margin="20 0 20 0" CornerRadius="10">
@@ -283,7 +260,8 @@
                 <TextBlock VerticalAlignment="Center" Foreground="#A3ABBD">Alt+Enter</TextBlock>
                 <!--全屏-->
                 <Button Name="PreviewFullScreenBtn" FontWeight="Bold" HorizontalAlignment="Right"
-                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0">
+                        Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
+                        Command="{Binding FullscreenCommand}">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="FocusVisualStyle" Value="{x:Null}" />

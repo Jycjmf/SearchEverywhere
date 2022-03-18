@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
@@ -6,9 +7,12 @@ namespace SearchEverywhere.View;
 
 public partial class PreviewWindow : Window, IView
 {
+    public static Action<bool> TopMostAction;
+
     public PreviewWindow()
     {
         InitializeComponent();
+        TopMostAction = sw => { Topmost = sw; };
         WeakReferenceMessenger.Default.Register<PreviewWindow, string, string>(this, "CloseWindowToken",
             (r, msg) => CloseWindowUtility());
         WeakReferenceMessenger.Default.Register<PreviewWindow, string, string>(this, "AddSingletonWindowPreview",

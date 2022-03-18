@@ -16,6 +16,7 @@ using SearchEverywhere.Model;
 using SearchEverywhere.Model.Message;
 using SearchEverywhere.Utility;
 using SearchEverywhere.View;
+using MessageBox = HandyControl.Controls.MessageBox;
 
 namespace SearchEverywhere.ViewModel;
 
@@ -131,6 +132,7 @@ public class MainViewModel : ObservableRecipient
             (r, msg) => { SwitchPage(MainUiElement.SearchView); });
         WeakReferenceMessenger.Default.Register<MainViewModel, string, string>(this, "CheckFirstButtonToken",
             (r, msg) => { FirstButtonChecked = true; });
+        ExitCommand = new RelayCommand(() => Application.Current.Shutdown());
     }
 
     public bool FirstButtonChecked
@@ -223,6 +225,7 @@ public class MainViewModel : ObservableRecipient
         }
     }
 
+    public ICommand ExitCommand { get; }
     public ICommand InputTabCommand { get; }
     public ICommand EnterCommand { get; }
     public ICommand UpCommand { get; }
@@ -309,28 +312,35 @@ public class MainViewModel : ObservableRecipient
 
     private void StartProcessSearch(string keyword)
     {
-        if (string.IsNullOrWhiteSpace(keyword))
+        try
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SearchResultList.Clear();
+                    foreach (var each in runningAppsList) SearchResultList.Add(each);
+                    SelectIndex = 0;
+                });
+            keyword = keyword.Replace(@"\", @"\\").Replace(".", "\\.");
+            var raw = runningAppsList
+                .Where(x => Regex.Matches(x.Title, keyword, RegexOptions.IgnoreCase).Count > 0)
+                .ToList();
+            var temp = new List<ListItemModel>();
+            foreach (var each in raw)
+                temp.Add(new ListItemModel(each.Icon,
+                    Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd,
+                    each.CreateTime, each.Size, each.Path, each.Extension, each.SvgIcon, each.ProcessId));
             Application.Current.Dispatcher.Invoke(() =>
             {
                 SearchResultList.Clear();
-                foreach (var each in runningAppsList) SearchResultList.Add(each);
+                temp.ForEach(x => SearchResultList.Add(x));
                 SelectIndex = 0;
             });
-        keyword = keyword.Replace(@"\", @"\\").Replace(".", "\\.");
-        var raw = runningAppsList
-            .Where(x => Regex.Matches(x.Title, keyword, RegexOptions.IgnoreCase).Count > 0)
-            .ToList();
-        var temp = new List<ListItemModel>();
-        foreach (var each in raw)
-            temp.Add(new ListItemModel(each.Icon,
-                Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd,
-                each.CreateTime, each.Size, each.Path, each.Extension, each.SvgIcon, each.ProcessId));
-        Application.Current.Dispatcher.Invoke(() =>
+        }
+        catch (Exception e)
         {
-            SearchResultList.Clear();
-            temp.ForEach(x => SearchResultList.Add(x));
-            SelectIndex = 0;
-        });
+            MessageBox.Show(e.ToString(), "Exception catch");
+        }
     }
 
     private async Task StartFileSearch(string keyword)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using SearchEverywhere.Model;
 using SearchEverywhere.Utility;
 using SearchEverywhere.Utility.office;
+using SearchEverywhere.View;
 using TagLib;
 using File = System.IO.File;
 
@@ -23,9 +25,9 @@ namespace SearchEverywhere.ViewModel;
 public class PreviewViewModel : ObservableRecipient
 {
     private readonly ConfigurationUtility config = Ioc.Default.GetService<ConfigurationUtility>();
+    private string currentPath;
     private PreviewModel currentPreviewModel = new();
     private bool isManualChangeSlider;
-
 
     public PreviewViewModel()
     {
@@ -33,6 +35,7 @@ public class PreviewViewModel : ObservableRecipient
             WeakReferenceMessenger.Default.Send(
                 new PlayStatusModel(PlayStatusModel.Status.Play, false, CurrentPreviewModel.VideoPath),
                 "PausePlayToken"));
+        TopMostCommand = new RelayCommand(() => { PreviewWindow.TopMostAction(CurrentPreviewModel.IsTopMost); });
         WeakReferenceMessenger.Default.Register<PreviewViewModel, CurrentTimeModel, string>(this,
             "ChangeVideoTimeToken", (r, msg) =>
             {
@@ -63,6 +66,7 @@ public class PreviewViewModel : ObservableRecipient
         WeakReferenceMessenger.Default.Register<PreviewViewModel, PreviewUiElementModel, string>(this, "StartPreview",
             (r, msg) =>
             {
+                currentPath = msg.Path;
                 switch (msg.ElementName)
                 {
                     case PreviewUiElementModel.PreviewUiElement.Image:
@@ -116,8 +120,23 @@ public class PreviewViewModel : ObservableRecipient
                     SwitchLayout(false);
             });
         CurrentPreviewModel.FontSize = config.appSettings.FontSize;
+        OpenFileCommand = new RelayCommand(() =>
+        {
+            if (!string.IsNullOrWhiteSpace(currentPath))
+                Process.Start(currentPath);
+        });
+        OpenFolderCommand = new RelayCommand(() =>
+        {
+            if (!string.IsNullOrWhiteSpace(currentPath))
+                Process.Start(Path.GetDirectoryName(currentPath)!);
+        });
         ChangeVisibility(PreviewUiElementModel.PreviewUiElement.Unknown);
     }
+
+    public ICommand OpenFileCommand { get; }
+    public ICommand OpenFolderCommand { get; }
+
+    public ICommand TopMostCommand { get; }
 
     public ICommand CloseWindowCommand { get; }
 

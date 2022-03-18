@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
         Title="PreviewWindow" Height="450" Width="800"
         DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
@@ -16,12 +17,22 @@
     <Grid Name="RootGird">
         <!--导航栏-->
         <Grid Background="White" WindowChrome.IsHitTestVisibleInChrome="False" VerticalAlignment="Top" Height="40">
-            <StackPanel Margin="0 0 15 0" HorizontalAlignment="Left" VerticalAlignment="Center"
+            <StackPanel Margin="10 0 15 0" HorizontalAlignment="Left" VerticalAlignment="Center"
                         Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True">
                 <!--Pin-->
-                <Button Name="FullScreenBtn" FontWeight="Bold"
-                        Height="30" Width="40" Foreground="Black" Cursor="Hand" FontSize="22" Content="&#xe75d;"
-                        WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
+                <ToggleButton Name="FullScreenBtn" FontWeight="Bold"
+                              Height="30" Width="40" Foreground="Black" Cursor="Hand" FontSize="22" Content="&#xe75d;"
+                              FontFamily="/Fonts/#iconfont"
+                              WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ToggleButtonFlip}"
+                              BorderThickness="0" FocusVisualStyle="{x:Null}"
+                              Margin="3 5 0 0" VerticalAlignment="Center" 
+                              IsChecked="{Binding CurrentPreviewModel.IsTopMost}"
+                              Command="{Binding TopMostCommand}">
+                    <hc:StatusSwitchElement.CheckedElement>
+                        <TextBlock Cursor="Hand" FontSize="22" Text="&#xe75d;" FontFamily="/Fonts/#iconfont"
+                                   Foreground="{DynamicResource SecondaryBorderBrush}" />
+                    </hc:StatusSwitchElement.CheckedElement>
+                </ToggleButton>
                 <!--Zoom-->
                 <Border Height="2" Background="Black" Width="10" />
                 <Slider VerticalAlignment="Center" Width="150" Value="{Binding   CurrentPreviewModel.FontSize}"
@@ -38,13 +49,13 @@
                 <Button Name="OpenOriginBtn" FontWeight="Bold"
                         Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
                         Content="&#xea66;"
-                        FontSize="18"
+                        FontSize="18" Command="{Binding OpenFileCommand}"
                         WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
                 <!--Open Folder-->
                 <Button Name="OpenBtn" FontWeight="Bold"
                         Height="30" Width="40" Foreground="Black" Cursor="Hand" Margin="0 0 15 0"
                         Content="&#xebdf;"
-                        FontSize="18"
+                        FontSize="18" Command="{Binding OpenFolderCommand}"
                         WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource ButtonStyle}" />
                 <!--Close-->
                 <Button Name="CloseBtn" FontWeight="Bold"

@@ -65,8 +65,11 @@
                     <svgc:SvgViewbox Source="img/setting.svg" Grid.Row="1" Margin="5" />
                 </RadioButton>
             </StackPanel>
+            <Button BorderBrush="Transparent"  VerticalAlignment="Bottom" Width="40" Height="40" Padding="5" Grid.Row="1" Margin="0 0 0 25" Cursor="Hand" Command="{Binding ExitCommand}">
+                <svgc:SvgViewbox Source="/img/power.svg" Width="20" />
+            </Button>
         </Grid>
-        <!--<local:SearchView x:Name="PreviewControl" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
+        <local:SearchView x:Name="PreviewControl" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
                           Visibility="{Binding CurrentUIVisibility.SearchVisibility}" />
         <Border Grid.Row="0" Grid.RowSpan="4" Grid.Column="0" Width="1" HorizontalAlignment="Right"
                 Background="{StaticResource BorderBrush}"
@@ -74,8 +77,9 @@
         <Grid Grid.Row="0" Grid.RowSpan="4" Grid.ColumnSpan="2" Grid.Column="0"
               Visibility="{Binding CurrentUIVisibility.WizardVisibility}" WindowChrome.IsHitTestVisibleInChrome="False">
             <local:WizardView />
-        </Grid>-->
-        <local:AboutView Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" />
+        </Grid>
+        <local:AboutView Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
+                         Visibility="{Binding CurrentUIVisibility.AboutVisibility}" />
     </Grid>
 
 </hc:Window>

@@ -18,6 +18,7 @@ public class PreviewModel : ObservableObject
 
     private ObservableCollection<ListboxItemModel> imageItemList = new();
     private string imagePath;
+    private bool isTopMost;
 
     private MusicTagModel musicTag = new();
     private string promptText = "↑、↓键选择一个文件\n使用Ctrl+Enter进行预览吧";
@@ -33,6 +34,16 @@ public class PreviewModel : ObservableObject
     private int titleHeight;
     private string videoPath;
     private ObservableCollection<WordContentModel> wordContentList = new();
+
+    public bool IsTopMost
+    {
+        get => isTopMost;
+        set
+        {
+            SetProperty(ref isTopMost, value);
+            OnPropertyChanged();
+        }
+    }
 
     public Visibility SecTipsVisibility
     {
