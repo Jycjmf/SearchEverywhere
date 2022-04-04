@@ -25,7 +25,7 @@
 |配置文件相关|\*.inf、\*.ini|
 
 **Attention**<br />
-目前预览PPT格式需要电脑安装Powerpoint，预览word、excel格式可能会出现问题
+目前预览PPT格式需要电脑安装Powerpoint，受限于个人能力，预览word、excel并不能保证与原始文件排版完全相同。
 
 
 ## 常用快捷键
