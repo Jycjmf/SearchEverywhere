@@ -6,7 +6,8 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d"
              xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding Source={StaticResource ViewModelLocator},Path=AboutViewModel}">
     <Grid Background="White">
         <Grid Name="WelcomeGrid">
             <Grid.RowDefinitions>
@@ -24,6 +25,7 @@
                 <Button Style="{DynamicResource ButtonInfo}" Background="{DynamicResource SecondaryBorderBrush}"
                         Width="130" Height="40" Content="Github 地址"
                         hc:IconElement.Geometry="{StaticResource GithubGeometry}"
+                        Command="{Binding GoToGithubCommand}"
                         Margin="0 50 0 0" Cursor="Hand" />
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Vertical">

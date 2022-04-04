@@ -70,9 +70,9 @@ public class MainViewModel : ObservableRecipient
         InputTabCommand = new RelayCommand(() =>
         {
             var index = SelectedItem.First(i => i.Value).Key;
-            if (index == 3)
+            if (index == 2)
             {
-                SelectedItem[3] = false;
+                SelectedItem[2] = false;
                 SelectedItem[0] = true;
             }
             else
@@ -321,7 +321,8 @@ public class MainViewModel : ObservableRecipient
                     foreach (var each in runningAppsList) SearchResultList.Add(each);
                     SelectIndex = 0;
                 });
-            keyword = keyword.Replace(@"\", @"\\").Replace(".", "\\.");
+            keyword = keyword?.Replace(@"\", @"\\").Replace(".", "\\.");
+            if (keyword == null) return;
             var raw = runningAppsList
                 .Where(x => Regex.Matches(x.Title, keyword, RegexOptions.IgnoreCase).Count > 0)
                 .ToList();

@@ -78,8 +78,11 @@
               Visibility="{Binding CurrentUIVisibility.WizardVisibility}" WindowChrome.IsHitTestVisibleInChrome="False">
             <local:WizardView />
         </Grid>
-        <local:AboutView Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
-                         Visibility="{Binding CurrentUIVisibility.AboutVisibility}" />
+        <Grid  Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"
+               Visibility="{Binding CurrentUIVisibility.AboutVisibility}" >
+            <local:AboutView/>
+        </Grid>
+
     </Grid>
 
 </hc:Window>

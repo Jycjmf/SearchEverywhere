@@ -125,8 +125,8 @@
                              Style="{StaticResource TopMenuStyle}" />
                 <RadioButton Content="本地磁盘" IsChecked="{Binding SelectedItem[2]}" hc:BorderElement.CornerRadius="0"
                              Style="{StaticResource TopMenuStyle}" />
-                <RadioButton Content="网络搜索" IsChecked="{Binding SelectedItem[3]}" hc:BorderElement.CornerRadius="0"
-                             Style="{StaticResource TopMenuStyle}" />
+                <!--<RadioButton Content="网络搜索" IsChecked="{Binding SelectedItem[3]}" hc:BorderElement.CornerRadius="0"
+                             Style="{StaticResource TopMenuStyle}" />-->
             </UniformGrid>
         </Grid>
 

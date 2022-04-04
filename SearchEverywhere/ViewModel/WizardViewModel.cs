@@ -57,7 +57,7 @@ public class WizardViewModel : ObservableRecipient
             SwitchPage(3);
         });
         CurrentWizardModel.ShortcutList.Add(new StaticShortcutModel("全屏预览", "Alt+Enter"));
-        CurrentWizardModel.ShortcutList.Add(new StaticShortcutModel("选择搜索框", "Ctrl+s"));
+        CurrentWizardModel.ShortcutList.Add(new StaticShortcutModel("选择搜索框", "Ctrl+S"));
         CurrentWizardModel.ShortcutList.Add(new StaticShortcutModel("切换搜索源", "Tab"));
         CurrentWizardModel.ShortcutList.Add(new StaticShortcutModel("显示主界面", "Shift+Shift"));
         CurrentWizardModel.ShortcutList.Add(new StaticShortcutModel("文件快速预览", "Ctrl+Enter"));

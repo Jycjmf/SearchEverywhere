@@ -21,6 +21,7 @@ public partial class App : Application
                 .AddSingleton<PreviewViewModel>()
                 .AddSingleton<WizardViewModel>()
                 .AddSingleton<SettingViewModel>()
+                .AddSingleton<AboutViewModel>()
                 .AddSingleton<ConfigurationUtility>()
                 .BuildServiceProvider());
     }
