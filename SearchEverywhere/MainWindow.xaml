@@ -9,7 +9,7 @@
            mc:Ignorable="d"
            DataContext="{Binding Source={StaticResource ViewModelLocator},Path=mainViewModel}"
            Title="SearchEverywhere" Height="600" Width="960" Loaded="Window_Loaded" ShowNonClientArea="False"
-           Background="White">
+           Background="White" Closing="MainWindow_OnClosing">
     <Window.Resources>
     </Window.Resources>
 

@@ -55,12 +55,12 @@
                         <StackPanel Orientation="Horizontal" Margin="0 20 0 0">
                             <svg:SvgViewbox Source="/img/auto start.svg" Width="25" Margin="5 0" />
                             <TextBlock FontSize="20" Text="开机自启动：" />
-                            <ToggleButton Style="{StaticResource ToggleButtonSwitch }" IsChecked="{Binding AutoRun}"/>
+                            <ToggleButton Style="{StaticResource ToggleButtonSwitch }" IsChecked="{Binding AutoRun}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0 20 0 0">
                             <svg:SvgViewbox Source="/img/DND.svg" Width="25" Margin="5 0" />
                             <TextBlock FontSize="20" Text="静默启动：" />
-                            <ToggleButton Style="{StaticResource ToggleButtonSwitch }" IsChecked="{Binding SlienceRun}"/>
+                            <ToggleButton Style="{StaticResource ToggleButtonSwitch }" IsChecked="{Binding SlienceRun}" />
                         </StackPanel>
                     </UniformGrid>
 
@@ -83,7 +83,7 @@
                     </StackPanel>
                     <UniformGrid Columns="2" Margin="0 40 0 0">
                         <Button Style="{StaticResource ButtonDanger}" Content="重置" FontSize="20" Width="100"
-                                Height="40" Cursor="Hand" Command="{Binding RestCommand}"/>
+                                Height="40" Cursor="Hand" Command="{Binding RestCommand}" />
                         <Button Style="{StaticResource ButtonSuccess}" Background="{DynamicResource PrimaryBrush}"
                                 Content="保存" FontSize="20" Width="100" Command="{Binding SaveCommand}"
                                 Height="40" Cursor="Hand" />
@@ -109,7 +109,7 @@
                 <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Margin="40 10  0 0">
                         <TextBlock FontSize="20" Text="开机自启动：" />
-                        <svg:SvgViewbox Source="/img/success.svg" Width="20" />
+                        <svg:SvgViewbox Source="{Binding AutoStartIcon}" Width="20" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="40 10  0 0">
                         <TextBlock FontSize="20" Text="LAVFilter服务：" />

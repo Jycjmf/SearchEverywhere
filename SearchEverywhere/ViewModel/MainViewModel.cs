@@ -321,7 +321,7 @@ public class MainViewModel : ObservableRecipient
                     foreach (var each in runningAppsList) SearchResultList.Add(each);
                     SelectIndex = 0;
                 });
-            keyword = keyword?.Replace(@"\", @"\\").Replace(".", "\\.");
+            keyword = keyword?.Replace(@"\", @"\\").Replace(".", @"\.").Replace("|", "");
             if (keyword == null) return;
             var raw = runningAppsList
                 .Where(x => Regex.Matches(x.Title, keyword, RegexOptions.IgnoreCase).Count > 0)
@@ -329,7 +329,8 @@ public class MainViewModel : ObservableRecipient
             var temp = new List<ListItemModel>();
             foreach (var each in raw)
                 temp.Add(new ListItemModel(each.Icon,
-                    Regex.Replace(each.Title, keyword, $"|~S~|{keyword}|~E~|", RegexOptions.IgnoreCase), each.Hwnd,
+                    Regex.Replace(each.Title, keyword, $"|~S~|{keyword.Replace(@"\.", ".")}|~E~|",
+                        RegexOptions.IgnoreCase), each.Hwnd,
                     each.CreateTime, each.Size, each.Path, each.Extension, each.SvgIcon, each.ProcessId));
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -348,7 +349,7 @@ public class MainViewModel : ObservableRecipient
     {
         if (string.IsNullOrWhiteSpace(keyword))
             return;
-
+        Application.Current.Dispatcher.Invoke(() => SearchResultList.Clear());
         var res = await everything.SearchFileAsync(keyword);
         if (res?.Result.Count == 0)
             return;

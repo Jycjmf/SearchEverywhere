@@ -14,6 +14,7 @@ public class SettingViewModel : ObservableRecipient
 {
     private readonly ConfigurationUtility config = Ioc.Default.GetService<ConfigurationUtility>();
     private bool autoRun;
+    private string autoStartIcon;
     private Visibility colorPickerVisibility = Visibility.Hidden;
     private int fontsize = 14;
     private WhichColor preChangeColor;
@@ -66,6 +67,7 @@ public class SettingViewModel : ObservableRecipient
                     auto.SetAutoStart();
                 else
                     auto.DeleteAutoStart();
+                AutoStartIcon = AutoRun ? "/img/success.svg" : "/img/error.svg";
             }
             catch (Exception e)
             {
@@ -81,6 +83,16 @@ public class SettingViewModel : ObservableRecipient
             Fontsize = 14;
             SearchDelay = 200;
         });
+    }
+
+    public string AutoStartIcon
+    {
+        get => autoStartIcon;
+        set
+        {
+            SetProperty(ref autoStartIcon, value);
+            OnPropertyChanged();
+        }
     }
 
     public ICommand RestCommand { get; }
@@ -139,6 +151,7 @@ public class SettingViewModel : ObservableRecipient
         }
     }
 
+
     public SolidColorBrush SelectedColorBrush
     {
         get => selectedColorBrush;
@@ -162,6 +175,7 @@ public class SettingViewModel : ObservableRecipient
         Fontsize = config.appSettings.FontSize;
         SearchDelay = config.appSettings.SearchDelay;
         AutoRun = config.appSettings.StartWithWindows;
+        AutoStartIcon = autoRun ? "/img/success.svg" : "/img/error.svg";
         SlienceRun = config.appSettings.SilentWindows;
     }
 

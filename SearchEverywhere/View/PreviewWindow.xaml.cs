@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -51,6 +52,12 @@ public partial class PreviewWindow : Window, IView
     {
         //PreviewView.instance ??= new PreviewView();
         //RootGird.Children.Add(PreviewView.instance);
+    }
+
+    private void PreviewWindow_OnClosing(object sender, CancelEventArgs e)
+    {
+        e.Cancel = true;
+        CloseWindowUtility();
     }
 }
 

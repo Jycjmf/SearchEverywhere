@@ -6,7 +6,7 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
         Title="PreviewWindow" Height="450" Width="800"
-        DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}">
+        DataContext="{Binding Source={StaticResource ViewModelLocator},Path=previewViewModel}" Closing="PreviewWindow_OnClosing">
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="40"

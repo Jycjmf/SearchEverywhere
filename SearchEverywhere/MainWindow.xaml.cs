@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -87,5 +88,10 @@ public partial class MainWindow
     {
         if (config.appSettings.SilentWindows) Visibility = Visibility.Hidden;
         var hotkey = new HotKeyUtility();
+    }
+
+    private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+    {
+        Environment.Exit(0);
     }
 }
