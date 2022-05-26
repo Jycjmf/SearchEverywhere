@@ -165,7 +165,7 @@ public class MainViewModel : ObservableRecipient
         set
         {
             SetProperty(ref selectIndex, value);
-            if (searchResultList.Count != 0 && value != -1)
+            if (searchResultList.Count != 0 && value >= 0)
                 CurrentApp = searchResultList[value];
             else
                 CurrentApp = null;

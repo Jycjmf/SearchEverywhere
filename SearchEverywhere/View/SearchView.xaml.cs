@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using HandyControl.Controls;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
@@ -39,5 +40,11 @@ public partial class SearchView : UserControl
 
     private void SearchView_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
+    }
+
+    private void ResultListView_OnPreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Up || e.Key == Key.Down)
+            e.Handled = true;
     }
 }

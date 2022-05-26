@@ -62,12 +62,23 @@ internal class ProcessUtility
             if (processList.Exists(x => x.ProcessId == ProcessId))
                 return;
             var tempProcess = Process.GetProcessById(ProcessId);
+            var count = 0;
+            while (tempProcess.MainWindowTitle.Length <= 0 && count < 3)
+            {
+                tempProcess = Process.GetProcessById(ProcessId);
+                count++;
+                await Task.Delay(500);
+            }
+
             if (tempProcess.MainWindowTitle.Length > 0)
             {
                 var processInfo = await GetProcessInfo(tempProcess);
                 processList.Add(processInfo);
                 WeakReferenceMessenger.Default.Send(new RefreshProcessModel(true, processInfo), "RefreshApplistToken");
             }
+        }
+        catch (ArgumentException exp)
+        {
         }
         catch (Exception exception)
         {

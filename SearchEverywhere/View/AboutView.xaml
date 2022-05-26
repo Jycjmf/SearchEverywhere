@@ -18,8 +18,11 @@
             <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center"
                         Margin="0 50 0 0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock FontSize="50" VerticalAlignment="Center" FontWeight="Bold">SearchEverywhere</TextBlock>
                     <Image Source="/img/logo.png" Width="60" RenderOptions.BitmapScalingMode="HighQuality" />
+                    <TextBlock FontSize="50" VerticalAlignment="Center" FontWeight="Bold">SearchEverywhere</TextBlock>
+                    <TextBlock VerticalAlignment="Bottom" FontSize="12" Margin="5 0 0 10">
+                        Ver 1.3
+                    </TextBlock>
                 </StackPanel>
                 <TextBlock FontSize="20" Margin="0 10 0 0">快速多任务切换 | 毫秒级文件搜索 | 常用格式预览 | 遵循MVVM模式</TextBlock>
                 <Button Style="{DynamicResource ButtonInfo}" Background="{DynamicResource SecondaryBorderBrush}"

@@ -304,7 +304,7 @@
         <!--搜索结果-->
         <ListView Grid.Row="3" ItemsSource="{Binding SearchResultList,Mode=OneWay}" Grid.Column="0"
                   ItemContainerStyle="{StaticResource ItemStyle}" SelectedIndex="{Binding SelectIndex}"
-                  BorderThickness="0" Margin="30 10 30 0" Background="White" Name="ResultListView">
+                  BorderThickness="0" Margin="30 10 30 0" Background="White" Name="ResultListView" PreviewKeyDown="ResultListView_OnPreviewKeyDown">
             <ListView.View>
                 <GridView ColumnHeaderContainerStyle="{StaticResource HeaderStyle}">
                     <GridViewColumn />

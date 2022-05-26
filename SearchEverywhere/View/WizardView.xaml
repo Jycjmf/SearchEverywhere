@@ -108,7 +108,7 @@
                             xf:Animations.PrimaryBinding="{Binding CurrentWizardModel.EnvironmentError,Converter={StaticResource ReverseBooleanConverter}}"
                             xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource FadeIn},Event=None}"
                             xf:Animations.SecondaryBinding="{Binding CurrentWizardModel.EnvironmentError}"
-                            Visibility="{Binding CurrentWizardModel.ExitButtonVisibility}" Command="hc:ControlCommands.CloseWindow">
+                            Visibility="{Binding CurrentWizardModel.ExitButtonVisibility}" Command="{Binding CloseCommand}">
                         退出
                     </Button>
                     <TextBlock HorizontalAlignment="Center" FontSize="20"
